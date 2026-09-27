@@ -7,6 +7,7 @@
  Backend API
  Node.js 20+ / Express / PostgreSQL
  Railway Ready
+ Version 8.0.0
 =========================================================
 */
 
@@ -22,11 +23,11 @@ const app = express();
 const PORT = Number(process.env.PORT || 3000);
 
 const PLATFORM_NAME = "EZ MEDIA";
-const PLATFORM_VERSION = "7.0.0";
+const PLATFORM_VERSION = "8.0.0";
 
 const APP_URL =
   process.env.APP_URL ||
-  "https://ez-media-production-a181.up.railway.app";
+  "https://ez-media-ez-media.up.railway.app";
 
 /*
 =========================================================
@@ -93,13 +94,25 @@ function now() {
   return new Date().toISOString();
 }
 
+function safeLimit(value, fallback = 20, max = 100) {
+  const number = Number(value);
+
+  if (!Number.isFinite(number)) {
+    return fallback;
+  }
+
+  return Math.min(
+    Math.max(Math.floor(number), 1),
+    max
+  );
+}
+
 function dbRequired(res) {
   if (!pool) {
     res.status(503).json({
       success: false,
       error: "DATABASE_NOT_CONFIGURED",
-      message:
-        "قاعدة البيانات غير مربوطة. أضف DATABASE_URL في Railway."
+      message: "قاعدة البيانات غير مربوطة."
     });
 
     return false;
@@ -108,14 +121,28 @@ function dbRequired(res) {
   return true;
 }
 
-function safeLimit(value, fallback = 20, max = 100) {
-  const number = Number(value);
+function makeSlug(value) {
+  return String(value || "")
+    .trim()
+    .toLowerCase()
+    .replace(/[^\u0600-\u06FFa-z0-9\s-]/g, "")
+    .replace(/\s+/g, "-")
+    .replace(/-+/g, "-")
+    .replace(/^-|-$/g, "");
+}
 
-  if (!Number.isFinite(number)) {
-    return fallback;
-  }
+function normalizeStatus(status) {
+  const allowed = [
+    "draft",
+    "review",
+    "ready",
+    "published",
+    "archived"
+  ];
 
-  return Math.min(Math.max(Math.floor(number), 1), max);
+  return allowed.includes(status)
+    ? status
+    : "draft";
 }
 
 /*
@@ -125,36 +152,36 @@ function safeLimit(value, fallback = 20, max = 100) {
 */
 
 const DEFAULT_SECTIONS = [
-  ["news", "الأخبار", "أحدث الأخبار والتحديثات"],
-  ["articles", "المقالات", "مقالات وتحليلات رقمية"],
-  ["coverage", "التغطيات الميدانية", "تغطيات وفعاليات ميدانية"],
-  ["video", "الفيديو", "الإنتاج المرئي"],
-  ["podcast", "البودكاست", "البرامج والحلقات الصوتية"],
-  ["live", "البث المباشر", "البث المباشر والفعاليات"],
-  ["satellite", "القناة الفضائية", "محتوى القنوات والبث الفضائي"],
-  ["media-production", "الإنتاج الإعلامي", "الإنتاج والتصوير والمونتاج"],
-  ["advertising", "الإعلانات", "الخدمات والحملات الإعلانية"],
-  ["services", "الخدمات الإعلامية", "خدمات الإعلام وصناعة المحتوى"],
-  ["social", "التوزيع الرقمي", "توزيع المحتوى على المنصات"],
-  ["spotlight", "الضوء", "محتوى مختار ومميز"],
-  ["reports", "التقارير", "تقارير إعلامية متخصصة"],
-  ["interviews", "المقابلات", "حوارات ومقابلات"],
-  ["events", "الفعاليات", "الفعاليات والمناسبات"],
-  ["technology", "التقنية", "التقنية والإعلام الرقمي"],
-  ["ai", "الذكاء الاصطناعي", "الذكاء الاصطناعي للإعلام"],
-  ["business", "الأعمال", "الأعمال والاقتصاد"],
-  ["culture", "الثقافة", "الثقافة والمجتمع"],
-  ["community", "المجتمع", "قصص المجتمع"],
-  ["photo", "الصور", "معرض الصور"],
-  ["audio", "الصوت", "المحتوى الصوتي"],
-  ["documentary", "الأفلام الوثائقية", "الأعمال الوثائقية"],
-  ["creative", "الإبداع", "المحتوى الإبداعي"],
-  ["marketing", "التسويق", "التسويق الرقمي"],
-  ["seo", "محركات البحث", "SEO واكتشاف المحتوى"],
-  ["analytics", "التحليلات", "تحليلات المنصة"],
-  ["automation", "الأتمتة", "الأتمتة وسير العمل"],
-  ["media-library", "مكتبة الوسائط", "الصور والفيديو والصوت"],
-  ["control-center", "مركز التحكم", "إدارة منصة EZ MEDIA"]
+  ["news", "الأخبار", "أحدث الأخبار والتحديثات", "📰"],
+  ["articles", "المقالات", "مقالات وتحليلات رقمية", "📝"],
+  ["coverage", "التغطيات", "تغطيات وفعاليات ميدانية", "🎥"],
+  ["video", "الفيديو", "الإنتاج المرئي", "▶️"],
+  ["podcast", "البودكاست", "البرامج والحلقات الصوتية", "🎙️"],
+  ["live", "البث المباشر", "البث المباشر والفعاليات", "🔴"],
+  ["satellite", "الفضائية", "محتوى القنوات والبث الفضائي", "📡"],
+  ["ai", "الذكاء الاصطناعي", "الذكاء الاصطناعي للإعلام", "🤖"],
+  ["automation", "الأتمتة", "الأتمتة وسير العمل", "⚙️"],
+  ["advertising", "الإعلانات", "الخدمات والحملات الإعلانية", "📢"],
+  ["sponsorship", "الرعاية", "الرعاية والشراكات", "🤝"],
+  ["production", "الإنتاج", "التصوير والمونتاج والإخراج", "🎬"],
+  ["studio", "الاستوديو", "التصوير والصوت والإضاءة", "🎞️"],
+  ["events", "الفعاليات", "الفعاليات والمناسبات", "🎪"],
+  ["community", "المجتمع", "قصص المجتمع والمبادرات", "👥"],
+  ["business", "الأعمال", "الأعمال والاقتصاد", "💼"],
+  ["technology", "التقنية", "التقنية والابتكار", "💻"],
+  ["travel", "السفر", "الوجهات والتجارب", "✈️"],
+  ["sports", "الرياضة", "الأخبار والتغطيات الرياضية", "🏆"],
+  ["culture", "الثقافة", "الثقافة والفنون والمعرفة", "📚"],
+  ["entertainment", "الترفيه", "الترفيه والفعاليات", "🎭"],
+  ["photo", "الصورة", "الصور والتصوير الميداني", "📷"],
+  ["audio", "الصوت", "الصوتيات والمقابلات", "🎧"],
+  ["archive", "الأرشيف", "أرشيف المحتوى الإعلامي", "🗄️"],
+  ["media-kit", "الملف الإعلامي", "نبذة وإنجازات وظهور إعلامي", "👤"],
+  ["services", "الخدمات", "الخدمات الإعلامية والتسويقية", "💼"],
+  ["commerce", "التجارة", "المتجر والمنتجات والخدمات التجارية", "🛒"],
+  ["partners", "الشركاء", "الشركاء الإعلاميون والتجاريون", "🌐"],
+  ["analytics", "التحليلات", "تحليلات الأداء والوصول", "📊"],
+  ["media-center", "مركز الإعلام", "المواد الإعلامية والتواصل", "📺"]
 ];
 
 /*
@@ -165,7 +192,9 @@ const DEFAULT_SECTIONS = [
 
 async function initializeDatabase() {
   if (!pool) {
-    console.log("DATABASE_URL غير موجودة — التشغيل بدون PostgreSQL.");
+    console.log(
+      "DATABASE_URL غير موجودة — التشغيل بدون PostgreSQL."
+    );
     return;
   }
 
@@ -191,15 +220,19 @@ async function initializeDatabase() {
       excerpt TEXT DEFAULT '',
       body TEXT DEFAULT '',
       type TEXT DEFAULT 'article',
+      branch TEXT DEFAULT '',
       image_url TEXT DEFAULT '',
       video_url TEXT DEFAULT '',
       audio_url TEXT DEFAULT '',
       author TEXT DEFAULT 'EZ MEDIA',
+      organization TEXT DEFAULT '',
+      phone TEXT DEFAULT '',
       status TEXT DEFAULT 'draft',
       featured BOOLEAN DEFAULT FALSE,
       scheduled_at TIMESTAMPTZ,
       published_at TIMESTAMPTZ,
       views BIGINT DEFAULT 0,
+      metadata JSONB DEFAULT '{}'::jsonb,
       created_at TIMESTAMPTZ DEFAULT NOW(),
       updated_at TIMESTAMPTZ DEFAULT NOW()
     );
@@ -211,6 +244,7 @@ async function initializeDatabase() {
       url TEXT NOT NULL,
       mime_type TEXT DEFAULT '',
       size BIGINT DEFAULT 0,
+      metadata JSONB DEFAULT '{}'::jsonb,
       created_at TIMESTAMPTZ DEFAULT NOW()
     );
 
@@ -270,6 +304,44 @@ async function initializeDatabase() {
       updated_at TIMESTAMPTZ DEFAULT NOW()
     );
 
+    CREATE TABLE IF NOT EXISTS branches (
+      id TEXT PRIMARY KEY,
+      section_id TEXT REFERENCES sections(id) ON DELETE CASCADE,
+      name TEXT NOT NULL,
+      slug TEXT NOT NULL,
+      description TEXT DEFAULT '',
+      banner_url TEXT DEFAULT '',
+      active BOOLEAN DEFAULT TRUE,
+      sort_order INTEGER DEFAULT 0,
+      created_at TIMESTAMPTZ DEFAULT NOW(),
+      updated_at TIMESTAMPTZ DEFAULT NOW(),
+      UNIQUE(section_id, slug)
+    );
+
+    CREATE TABLE IF NOT EXISTS partners (
+      id TEXT PRIMARY KEY,
+      name TEXT NOT NULL,
+      type TEXT DEFAULT 'partner',
+      logo_url TEXT DEFAULT '',
+      website_url TEXT DEFAULT '',
+      description TEXT DEFAULT '',
+      active BOOLEAN DEFAULT TRUE,
+      created_at TIMESTAMPTZ DEFAULT NOW()
+    );
+
+    CREATE TABLE IF NOT EXISTS advertisements (
+      id TEXT PRIMARY KEY,
+      title TEXT NOT NULL,
+      organization TEXT DEFAULT '',
+      image_url TEXT DEFAULT '',
+      link_url TEXT DEFAULT '',
+      status TEXT DEFAULT 'draft',
+      starts_at TIMESTAMPTZ,
+      ends_at TIMESTAMPTZ,
+      created_at TIMESTAMPTZ DEFAULT NOW(),
+      updated_at TIMESTAMPTZ DEFAULT NOW()
+    );
+
     CREATE INDEX IF NOT EXISTS idx_content_status
       ON content(status);
 
@@ -279,49 +351,88 @@ async function initializeDatabase() {
     CREATE INDEX IF NOT EXISTS idx_content_section
       ON content(section_id);
 
+    CREATE INDEX IF NOT EXISTS idx_content_branch
+      ON content(branch);
+
     CREATE INDEX IF NOT EXISTS idx_content_published
       ON content(published_at);
 
     CREATE INDEX IF NOT EXISTS idx_events_created
       ON analytics_events(created_at);
+
+    CREATE INDEX IF NOT EXISTS idx_branches_section
+      ON branches(section_id);
   `);
 
-  for (let i = 0; i < DEFAULT_SECTIONS.length; i++) {
-    const [slug, name, description] = DEFAULT_SECTIONS[i];
+  for (
+    let i = 0;
+    i < DEFAULT_SECTIONS.length;
+    i++
+  ) {
+    const [
+      slug,
+      name,
+      description,
+      icon
+    ] = DEFAULT_SECTIONS[i];
 
     await pool.query(
       `
       INSERT INTO sections
-      (id, slug, name, description, sort_order)
-      VALUES ($1,$2,$3,$4,$5)
-      ON CONFLICT (slug) DO NOTHING
+      (
+        id,
+        slug,
+        name,
+        description,
+        icon,
+        sort_order
+      )
+      VALUES ($1,$2,$3,$4,$5,$6)
+      ON CONFLICT (slug)
+      DO UPDATE SET
+        name = EXCLUDED.name,
+        description = EXCLUDED.description,
+        icon = EXCLUDED.icon,
+        updated_at = NOW()
       `,
       [
         createId(),
         slug,
         name,
         description,
+        icon,
         i + 1
       ]
     );
   }
 
-  await pool.query(`
-    INSERT INTO settings (key, value)
+  await pool.query(
+    `
+    INSERT INTO settings (key,value)
     VALUES
-      ('platform_name', 'EZ MEDIA'),
-      ('platform_description', 'منصة الإعلام الرقمي وصناعة المحتوى'),
-      ('platform_url', $1),
-      ('default_language', 'ar')
-    ON CONFLICT (key) DO NOTHING
-  `, [APP_URL]);
+      ('platform_name','EZ MEDIA'),
+      ('platform_description','منصة الإعلام الرقمي وصناعة المحتوى'),
+      ('platform_url',$1),
+      ('default_language','ar'),
+      ('platform_version',$2)
+    ON CONFLICT (key) DO UPDATE SET
+      value = EXCLUDED.value,
+      updated_at = NOW()
+    `,
+    [
+      APP_URL,
+      PLATFORM_VERSION
+    ]
+  );
 
-  console.log("EZ MEDIA database initialized.");
+  console.log(
+    "EZ MEDIA database initialized."
+  );
 }
 
 /*
 =========================================================
- BASIC ROUTES
+ HEALTH
 =========================================================
 */
 
@@ -332,7 +443,7 @@ app.get("/api/health", async (req, res) => {
     try {
       await pool.query("SELECT 1");
       database = "connected";
-    } catch {
+    } catch (error) {
       database = "error";
     }
   }
@@ -347,14 +458,33 @@ app.get("/api/health", async (req, res) => {
   });
 });
 
+/*
+=========================================================
+ PLATFORM
+=========================================================
+*/
+
 app.get("/api/platform", (req, res) => {
   res.json({
     success: true,
     platform: PLATFORM_NAME,
     version: PLATFORM_VERSION,
-    description: "منصة الإعلام الرقمي وصناعة المحتوى",
+    description:
+      "منصة الإعلام الرقمي وصناعة المحتوى",
     url: APP_URL,
-    status: "online"
+    status: "online",
+    features: [
+      "content",
+      "sections",
+      "branches",
+      "media",
+      "banners",
+      "advertising",
+      "partners",
+      "analytics",
+      "automation",
+      "settings"
+    ]
   });
 });
 
@@ -370,13 +500,16 @@ app.get("/api/sections", async (req, res) => {
       success: true,
       source: "default",
       sections: DEFAULT_SECTIONS.map(
-        ([slug, name, description], index) => ({
+        (
+          [slug, name, description, icon],
+          index
+        ) => ({
           id: `default-${index + 1}`,
           slug,
           name,
           description,
           banner_url: "",
-          icon: "▣",
+          icon,
           active: true,
           sort_order: index + 1
         })
@@ -452,14 +585,23 @@ app.post("/api/sections", async (req, res) => {
     const result = await pool.query(
       `
       INSERT INTO sections
-      (id, slug, name, description, banner_url, icon, active, sort_order)
+      (
+        id,
+        slug,
+        name,
+        description,
+        banner_url,
+        icon,
+        active,
+        sort_order
+      )
       VALUES ($1,$2,$3,$4,$5,$6,$7,$8)
       RETURNING *
       `,
       [
         createId(),
-        slug,
         name,
+        slug,
         description,
         banner_url,
         icon,
@@ -482,8 +624,6 @@ app.post("/api/sections", async (req, res) => {
 
 app.put("/api/sections/:id", async (req, res) => {
   if (!dbRequired(res)) return;
-
-  const { id: sectionId } = req.params;
 
   const {
     name,
@@ -512,7 +652,7 @@ app.put("/api/sections/:id", async (req, res) => {
       RETURNING *
       `,
       [
-        sectionId,
+        req.params.id,
         name,
         slug,
         description,
@@ -576,14 +716,216 @@ app.delete("/api/sections/:id", async (req, res) => {
 
 /*
 =========================================================
+ BRANCHES
+=========================================================
+*/
+
+app.get("/api/branches", async (req, res) => {
+  if (!dbRequired(res)) return;
+
+  try {
+    const values = [];
+    let where = "";
+
+    if (req.query.section_id) {
+      values.push(req.query.section_id);
+      where = `WHERE section_id = $1`;
+    }
+
+    const result = await pool.query(
+      `
+      SELECT *
+      FROM branches
+      ${where}
+      ORDER BY sort_order ASC, created_at ASC
+      `,
+      values
+    );
+
+    res.json({
+      success: true,
+      branches: result.rows
+    });
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      error: error.message
+    });
+  }
+});
+
+app.post("/api/branches", async (req, res) => {
+  if (!dbRequired(res)) return;
+
+  const {
+    section_id,
+    name,
+    slug,
+    description = "",
+    banner_url = "",
+    active = true,
+    sort_order = 0
+  } = req.body;
+
+  if (!section_id || !name) {
+    return res.status(400).json({
+      success: false,
+      error: "section_id_and_name_required"
+    });
+  }
+
+  const finalSlug =
+    slug || makeSlug(name);
+
+  try {
+    const result = await pool.query(
+      `
+      INSERT INTO branches
+      (
+        id,
+        section_id,
+        name,
+        slug,
+        description,
+        banner_url,
+        active,
+        sort_order
+      )
+      VALUES ($1,$2,$3,$4,$5,$6,$7,$8)
+      RETURNING *
+      `,
+      [
+        createId(),
+        section_id,
+        name,
+        finalSlug,
+        description,
+        banner_url,
+        active,
+        sort_order
+      ]
+    );
+
+    res.status(201).json({
+      success: true,
+      branch: result.rows[0]
+    });
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      error: error.message
+    });
+  }
+});
+
+app.put("/api/branches/:id", async (req, res) => {
+  if (!dbRequired(res)) return;
+
+  const fields = [
+    "section_id",
+    "name",
+    "slug",
+    "description",
+    "banner_url",
+    "active",
+    "sort_order"
+  ];
+
+  const updates = [];
+  const values = [req.params.id];
+
+  for (const field of fields) {
+    if (
+      Object.prototype.hasOwnProperty.call(
+        req.body,
+        field
+      )
+    ) {
+      values.push(req.body[field]);
+      updates.push(
+        `${field} = $${values.length}`
+      );
+    }
+  }
+
+  if (!updates.length) {
+    return res.status(400).json({
+      success: false,
+      error: "nothing_to_update"
+    });
+  }
+
+  updates.push("updated_at = NOW()");
+
+  try {
+    const result = await pool.query(
+      `
+      UPDATE branches
+      SET ${updates.join(",")}
+      WHERE id = $1
+      RETURNING *
+      `,
+      values
+    );
+
+    if (!result.rows.length) {
+      return res.status(404).json({
+        success: false,
+        error: "branch_not_found"
+      });
+    }
+
+    res.json({
+      success: true,
+      branch: result.rows[0]
+    });
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      error: error.message
+    });
+  }
+});
+
+app.delete("/api/branches/:id", async (req, res) => {
+  if (!dbRequired(res)) return;
+
+  try {
+    await pool.query(
+      `DELETE FROM branches WHERE id = $1`,
+      [req.params.id]
+    );
+
+    res.json({
+      success: true,
+      deleted: true
+    });
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      error: error.message
+    });
+  }
+});
+
+/*
+=========================================================
  CONTENT
 =========================================================
 */
 
 app.get("/api/content", async (req, res) => {
-  const limit = safeLimit(req.query.limit, 20, 100);
-  const type = req.query.type || null;
-  const section = req.query.section || null;
+  const limit = safeLimit(
+    req.query.limit,
+    20,
+    100
+  );
+
+  const type =
+    req.query.type || null;
+
+  const section =
+    req.query.section || null;
 
   if (!pool) {
     return res.json({
@@ -596,6 +938,7 @@ app.get("/api/content", async (req, res) => {
 
   try {
     const values = [];
+
     const conditions = [
       `status = 'published'`,
       `(published_at IS NULL OR published_at <= NOW())`
@@ -603,12 +946,22 @@ app.get("/api/content", async (req, res) => {
 
     if (type) {
       values.push(type);
-      conditions.push(`type = $${values.length}`);
+      conditions.push(
+        `type = $${values.length}`
+      );
     }
 
     if (section) {
       values.push(section);
-      conditions.push(`section_id = $${values.length}`);
+      conditions.push(
+        `(section_id = $${values.length}
+        OR EXISTS (
+          SELECT 1
+          FROM sections s2
+          WHERE s2.id = c.section_id
+          AND s2.slug = $${values.length}
+        ))`
+      );
     }
 
     values.push(limit);
@@ -623,7 +976,11 @@ app.get("/api/content", async (req, res) => {
       LEFT JOIN sections s
         ON s.id = c.section_id
       WHERE ${conditions.join(" AND ")}
-      ORDER BY COALESCE(c.published_at,c.created_at) DESC
+      ORDER BY
+        COALESCE(
+          c.published_at,
+          c.created_at
+        ) DESC
       LIMIT $${values.length}
       `,
       values
@@ -647,7 +1004,11 @@ app.get("/api/content", async (req, res) => {
 app.get("/api/content/all", async (req, res) => {
   if (!dbRequired(res)) return;
 
-  const limit = safeLimit(req.query.limit, 100, 500);
+  const limit = safeLimit(
+    req.query.limit,
+    100,
+    500
+  );
 
   try {
     const result = await pool.query(
@@ -724,14 +1085,18 @@ app.post("/api/content", async (req, res) => {
     excerpt = "",
     body = "",
     type = "article",
+    branch = "",
     image_url = "",
     video_url = "",
     audio_url = "",
     author = "EZ MEDIA",
+    organization = "",
+    phone = "",
     status = "draft",
     featured = false,
     scheduled_at = null,
-    published_at = null
+    published_at = null,
+    metadata = {}
   } = req.body;
 
   if (!title) {
@@ -739,6 +1104,22 @@ app.post("/api/content", async (req, res) => {
       success: false,
       error: "title_required"
     });
+  }
+
+  const finalSlug =
+    slug || makeSlug(title);
+
+  const finalStatus =
+    normalizeStatus(status);
+
+  let finalPublishedAt =
+    published_at;
+
+  if (
+    finalStatus === "published" &&
+    !finalPublishedAt
+  ) {
+    finalPublishedAt = now();
   }
 
   try {
@@ -753,18 +1134,23 @@ app.post("/api/content", async (req, res) => {
         excerpt,
         body,
         type,
+        branch,
         image_url,
         video_url,
         audio_url,
         author,
+        organization,
+        phone,
         status,
         featured,
         scheduled_at,
-        published_at
+        published_at,
+        metadata
       )
       VALUES
       (
-        $1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12,$13,$14,$15
+        $1,$2,$3,$4,$5,$6,$7,$8,$9,$10,
+        $11,$12,$13,$14,$15,$16,$17,$18,$19
       )
       RETURNING *
       `,
@@ -772,18 +1158,22 @@ app.post("/api/content", async (req, res) => {
         createId(),
         section_id,
         title,
-        slug,
+        finalSlug,
         excerpt,
         body,
         type,
+        branch,
         image_url,
         video_url,
         audio_url,
         author,
-        status,
+        organization,
+        phone,
+        finalStatus,
         featured,
         scheduled_at,
-        published_at
+        finalPublishedAt,
+        JSON.stringify(metadata)
       ]
     );
 
@@ -809,22 +1199,45 @@ app.put("/api/content/:id", async (req, res) => {
     "excerpt",
     "body",
     "type",
+    "branch",
     "image_url",
     "video_url",
     "audio_url",
     "author",
+    "organization",
+    "phone",
     "status",
     "featured",
     "scheduled_at",
-    "published_at"
+    "published_at",
+    "metadata"
   ];
 
   const updates = [];
   const values = [req.params.id];
 
   for (const field of fields) {
-    if (Object.prototype.hasOwnProperty.call(req.body, field)) {
-      values.push(req.body[field]);
+    if (
+      Object.prototype.hasOwnProperty.call(
+        req.body,
+        field
+      )
+    ) {
+      let value = req.body[field];
+
+      if (field === "status") {
+        value = normalizeStatus(value);
+      }
+
+      if (
+        field === "metadata" &&
+        typeof value !== "string"
+      ) {
+        value = JSON.stringify(value);
+      }
+
+      values.push(value);
+
       updates.push(
         `${field} = $${values.length}`
       );
@@ -844,7 +1257,7 @@ app.put("/api/content/:id", async (req, res) => {
     const result = await pool.query(
       `
       UPDATE content
-      SET ${updates.join(", ")}
+      SET ${updates.join(",")}
       WHERE id = $1
       RETURNING *
       `,
@@ -965,7 +1378,15 @@ app.post("/api/banners", async (req, res) => {
     const result = await pool.query(
       `
       INSERT INTO banners
-      (id,section_id,title,subtitle,image_url,link_url,active)
+      (
+        id,
+        section_id,
+        title,
+        subtitle,
+        image_url,
+        link_url,
+        active
+      )
       VALUES ($1,$2,$3,$4,$5,$6,$7)
       RETURNING *
       `,
@@ -1055,7 +1476,8 @@ app.post("/api/media", async (req, res) => {
     type = "image",
     url,
     mime_type = "",
-    size = 0
+    size = 0,
+    metadata = {}
   } = req.body;
 
   if (!url) {
@@ -1069,8 +1491,16 @@ app.post("/api/media", async (req, res) => {
     const result = await pool.query(
       `
       INSERT INTO media
-      (id,title,type,url,mime_type,size)
-      VALUES ($1,$2,$3,$4,$5,$6)
+      (
+        id,
+        title,
+        type,
+        url,
+        mime_type,
+        size,
+        metadata
+      )
+      VALUES ($1,$2,$3,$4,$5,$6,$7)
       RETURNING *
       `,
       [
@@ -1079,7 +1509,8 @@ app.post("/api/media", async (req, res) => {
         type,
         url,
         mime_type,
-        size
+        size,
+        JSON.stringify(metadata)
       ]
     );
 
@@ -1101,6 +1532,310 @@ app.delete("/api/media/:id", async (req, res) => {
   try {
     await pool.query(
       `DELETE FROM media WHERE id = $1`,
+      [req.params.id]
+    );
+
+    res.json({
+      success: true,
+      deleted: true
+    });
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      error: error.message
+    });
+  }
+});
+
+/*
+=========================================================
+ PARTNERS
+=========================================================
+*/
+
+app.get("/api/partners", async (req, res) => {
+  if (!pool) {
+    return res.json({
+      success: true,
+      partners: []
+    });
+  }
+
+  try {
+    const result = await pool.query(`
+      SELECT *
+      FROM partners
+      WHERE active = TRUE
+      ORDER BY created_at DESC
+    `);
+
+    res.json({
+      success: true,
+      partners: result.rows
+    });
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      error: error.message
+    });
+  }
+});
+
+app.post("/api/partners", async (req, res) => {
+  if (!dbRequired(res)) return;
+
+  const {
+    name,
+    type = "partner",
+    logo_url = "",
+    website_url = "",
+    description = "",
+    active = true
+  } = req.body;
+
+  if (!name) {
+    return res.status(400).json({
+      success: false,
+      error: "name_required"
+    });
+  }
+
+  try {
+    const result = await pool.query(
+      `
+      INSERT INTO partners
+      (
+        id,
+        name,
+        type,
+        logo_url,
+        website_url,
+        description,
+        active
+      )
+      VALUES ($1,$2,$3,$4,$5,$6,$7)
+      RETURNING *
+      `,
+      [
+        createId(),
+        name,
+        type,
+        logo_url,
+        website_url,
+        description,
+        active
+      ]
+    );
+
+    res.status(201).json({
+      success: true,
+      partner: result.rows[0]
+    });
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      error: error.message
+    });
+  }
+});
+
+app.delete("/api/partners/:id", async (req, res) => {
+  if (!dbRequired(res)) return;
+
+  try {
+    await pool.query(
+      `DELETE FROM partners WHERE id = $1`,
+      [req.params.id]
+    );
+
+    res.json({
+      success: true,
+      deleted: true
+    });
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      error: error.message
+    });
+  }
+});
+
+/*
+=========================================================
+ ADVERTISEMENTS
+=========================================================
+*/
+
+app.get("/api/advertisements", async (req, res) => {
+  if (!pool) {
+    return res.json({
+      success: true,
+      advertisements: []
+    });
+  }
+
+  try {
+    const result = await pool.query(`
+      SELECT *
+      FROM advertisements
+      ORDER BY created_at DESC
+    `);
+
+    res.json({
+      success: true,
+      advertisements: result.rows
+    });
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      error: error.message
+    });
+  }
+});
+
+app.post("/api/advertisements", async (req, res) => {
+  if (!dbRequired(res)) return;
+
+  const {
+    title,
+    organization = "",
+    image_url = "",
+    link_url = "",
+    status = "draft",
+    starts_at = null,
+    ends_at = null
+  } = req.body;
+
+  if (!title) {
+    return res.status(400).json({
+      success: false,
+      error: "title_required"
+    });
+  }
+
+  try {
+    const result = await pool.query(
+      `
+      INSERT INTO advertisements
+      (
+        id,
+        title,
+        organization,
+        image_url,
+        link_url,
+        status,
+        starts_at,
+        ends_at
+      )
+      VALUES ($1,$2,$3,$4,$5,$6,$7,$8)
+      RETURNING *
+      `,
+      [
+        createId(),
+        title,
+        organization,
+        image_url,
+        link_url,
+        normalizeStatus(status),
+        starts_at,
+        ends_at
+      ]
+    );
+
+    res.status(201).json({
+      success: true,
+      advertisement: result.rows[0]
+    });
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      error: error.message
+    });
+  }
+});
+
+app.put("/api/advertisements/:id", async (req, res) => {
+  if (!dbRequired(res)) return;
+
+  const fields = [
+    "title",
+    "organization",
+    "image_url",
+    "link_url",
+    "status",
+    "starts_at",
+    "ends_at"
+  ];
+
+  const updates = [];
+  const values = [req.params.id];
+
+  for (const field of fields) {
+    if (
+      Object.prototype.hasOwnProperty.call(
+        req.body,
+        field
+      )
+    ) {
+      let value = req.body[field];
+
+      if (field === "status") {
+        value = normalizeStatus(value);
+      }
+
+      values.push(value);
+
+      updates.push(
+        `${field} = $${values.length}`
+      );
+    }
+  }
+
+  if (!updates.length) {
+    return res.status(400).json({
+      success: false,
+      error: "nothing_to_update"
+    });
+  }
+
+  updates.push("updated_at = NOW()");
+
+  try {
+    const result = await pool.query(
+      `
+      UPDATE advertisements
+      SET ${updates.join(",")}
+      WHERE id = $1
+      RETURNING *
+      `,
+      values
+    );
+
+    if (!result.rows.length) {
+      return res.status(404).json({
+        success: false,
+        error: "advertisement_not_found"
+      });
+    }
+
+    res.json({
+      success: true,
+      advertisement: result.rows[0]
+    });
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      error: error.message
+    });
+  }
+});
+
+app.delete("/api/advertisements/:id", async (req, res) => {
+  if (!dbRequired(res)) return;
+
+  try {
+    await pool.query(
+      `DELETE FROM advertisements WHERE id = $1`,
       [req.params.id]
     );
 
@@ -1249,7 +1984,13 @@ app.post("/api/automation/jobs", async (req, res) => {
     const result = await pool.query(
       `
       INSERT INTO automation_jobs
-      (id,name,type,status,configuration)
+      (
+        id,
+        name,
+        type,
+        status,
+        configuration
+      )
       VALUES ($1,$2,$3,$4,$5)
       RETURNING *
       `,
@@ -1277,7 +2018,8 @@ app.post("/api/automation/jobs", async (req, res) => {
 app.post("/api/automation/run", async (req, res) => {
   if (!dbRequired(res)) return;
 
-  const jobId = req.body.job_id || null;
+  const jobId =
+    req.body.job_id || null;
 
   try {
     const runId = createId();
@@ -1285,14 +2027,19 @@ app.post("/api/automation/run", async (req, res) => {
     await pool.query(
       `
       INSERT INTO automation_runs
-      (id,job_id,status,message)
+      (
+        id,
+        job_id,
+        status,
+        message
+      )
       VALUES ($1,$2,$3,$4)
       `,
       [
         runId,
         jobId,
         "queued",
-        "تم إنشاء تشغيل جديد. يحتاج تنفيذ الموصل/المهمة الفعلية."
+        "تم إنشاء تشغيل جديد."
       ]
     );
 
@@ -1300,8 +2047,9 @@ app.post("/api/automation/run", async (req, res) => {
       await pool.query(
         `
         UPDATE automation_jobs
-        SET last_run_at = NOW(),
-            updated_at = NOW()
+        SET
+          last_run_at = NOW(),
+          updated_at = NOW()
         WHERE id = $1
         `,
         [jobId]
@@ -1375,7 +2123,12 @@ app.post("/api/analytics/event", async (req, res) => {
     await pool.query(
       `
       INSERT INTO analytics_events
-      (id,event_name,page,metadata)
+      (
+        id,
+        event_name,
+        page,
+        metadata
+      )
       VALUES ($1,$2,$3,$4)
       `,
       [
@@ -1405,9 +2158,13 @@ app.get("/api/stats", async (req, res) => {
       database: false,
       stats: {
         sections: DEFAULT_SECTIONS.length,
+        branches: 0,
         content: 0,
         media: 0,
         sources: 0,
+        banners: 0,
+        partners: 0,
+        advertisements: 0,
         automation_jobs: 0,
         events: 0
       }
@@ -1417,30 +2174,74 @@ app.get("/api/stats", async (req, res) => {
   try {
     const [
       sections,
+      branches,
       content,
       media,
       sources,
+      banners,
+      partners,
+      advertisements,
       jobs,
       events
     ] = await Promise.all([
-      pool.query(`SELECT COUNT(*) FROM sections`),
-      pool.query(`SELECT COUNT(*) FROM content`),
-      pool.query(`SELECT COUNT(*) FROM media`),
-      pool.query(`SELECT COUNT(*) FROM sources`),
-      pool.query(`SELECT COUNT(*) FROM automation_jobs`),
-      pool.query(`SELECT COUNT(*) FROM analytics_events`)
+      pool.query(
+        `SELECT COUNT(*) FROM sections`
+      ),
+      pool.query(
+        `SELECT COUNT(*) FROM branches`
+      ),
+      pool.query(
+        `SELECT COUNT(*) FROM content`
+      ),
+      pool.query(
+        `SELECT COUNT(*) FROM media`
+      ),
+      pool.query(
+        `SELECT COUNT(*) FROM sources`
+      ),
+      pool.query(
+        `SELECT COUNT(*) FROM banners`
+      ),
+      pool.query(
+        `SELECT COUNT(*) FROM partners`
+      ),
+      pool.query(
+        `SELECT COUNT(*) FROM advertisements`
+      ),
+      pool.query(
+        `SELECT COUNT(*) FROM automation_jobs`
+      ),
+      pool.query(
+        `SELECT COUNT(*) FROM analytics_events`
+      )
     ]);
 
     res.json({
       success: true,
       database: true,
       stats: {
-        sections: Number(sections.rows[0].count),
-        content: Number(content.rows[0].count),
-        media: Number(media.rows[0].count),
-        sources: Number(sources.rows[0].count),
-        automation_jobs: Number(jobs.rows[0].count),
-        events: Number(events.rows[0].count)
+        sections:
+          Number(sections.rows[0].count),
+        branches:
+          Number(branches.rows[0].count),
+        content:
+          Number(content.rows[0].count),
+        media:
+          Number(media.rows[0].count),
+        sources:
+          Number(sources.rows[0].count),
+        banners:
+          Number(banners.rows[0].count),
+        partners:
+          Number(partners.rows[0].count),
+        advertisements:
+          Number(
+            advertisements.rows[0].count
+          ),
+        automation_jobs:
+          Number(jobs.rows[0].count),
+        events:
+          Number(events.rows[0].count)
       }
     });
   } catch (error) {
@@ -1466,7 +2267,9 @@ app.get("/api/settings", async (req, res) => {
         platform_description:
           "منصة الإعلام الرقمي وصناعة المحتوى",
         platform_url: APP_URL,
-        default_language: "ar"
+        default_language: "ar",
+        platform_version:
+          PLATFORM_VERSION
       }
     });
   }
@@ -1507,7 +2310,8 @@ app.put("/api/settings/:key", async (req, res) => {
   try {
     await pool.query(
       `
-      INSERT INTO settings (key,value)
+      INSERT INTO settings
+      (key,value)
       VALUES ($1,$2)
       ON CONFLICT (key)
       DO UPDATE SET
@@ -1542,7 +2346,8 @@ app.put("/api/settings/:key", async (req, res) => {
 app.get("/api/search", async (req, res) => {
   if (!dbRequired(res)) return;
 
-  const q = String(req.query.q || "").trim();
+  const q =
+    String(req.query.q || "").trim();
 
   if (!q) {
     return res.json({
@@ -1555,21 +2360,29 @@ app.get("/api/search", async (req, res) => {
     const result = await pool.query(
       `
       SELECT
-        id,
-        title,
-        excerpt,
-        type,
-        image_url,
-        published_at
-      FROM content
+        c.id,
+        c.title,
+        c.excerpt,
+        c.type,
+        c.branch,
+        c.image_url,
+        c.status,
+        c.published_at,
+        s.slug AS section_slug,
+        s.name AS section_name
+      FROM content c
+      LEFT JOIN sections s
+        ON s.id = c.section_id
       WHERE
-        status = 'published'
-        AND (
-          title ILIKE $1
-          OR excerpt ILIKE $1
-          OR body ILIKE $1
+        (
+          c.title ILIKE $1
+          OR c.excerpt ILIKE $1
+          OR c.body ILIKE $1
+          OR c.branch ILIKE $1
         )
-      ORDER BY published_at DESC NULLS LAST
+      ORDER BY
+        c.published_at DESC NULLS LAST,
+        c.created_at DESC
       LIMIT 50
       `,
       [`%${q}%`]
@@ -1593,13 +2406,19 @@ app.get("/api/search", async (req, res) => {
 =========================================================
 */
 
-const PUBLIC_DIR = path.join(__dirname, "public");
+const PUBLIC_DIR =
+  path.join(__dirname, "public");
 
-app.use(express.static(PUBLIC_DIR));
+app.use(
+  express.static(PUBLIC_DIR)
+);
 
 app.get("/", (req, res) => {
   res.sendFile(
-    path.join(PUBLIC_DIR, "index.html")
+    path.join(
+      PUBLIC_DIR,
+      "index.html"
+    )
   );
 });
 
@@ -1629,8 +2448,12 @@ app.use((req, res) => {
     <html lang="ar" dir="rtl">
     <head>
       <meta charset="utf-8">
-      <meta name="viewport" content="width=device-width,initial-scale=1">
+      <meta
+        name="viewport"
+        content="width=device-width,initial-scale=1"
+      >
       <title>EZ MEDIA</title>
+
       <style>
         body{
           margin:0;
@@ -1638,23 +2461,40 @@ app.use((req, res) => {
           display:grid;
           place-items:center;
           font-family:Arial,sans-serif;
-          background:#fff;
-          color:#123047;
+          background:
+            linear-gradient(
+              135deg,
+              #ffffff,
+              #f7fcff,
+              #e9f7ff
+            );
+          color:#17384c;
         }
+
         main{
           width:min(650px,90%);
           padding:40px;
           text-align:center;
-          border:1px solid #d9f3ff;
+          border:1px solid #d9edf7;
           border-radius:24px;
-          box-shadow:0 20px 60px rgba(0,160,220,.08);
+          background:#ffffff;
+          box-shadow:
+            0 20px 60px
+            rgba(37,145,195,.10);
+        }
+
+        h1{
+          color:#168fd0;
         }
       </style>
     </head>
+
     <body>
       <main>
         <h1>EZ MEDIA</h1>
-        <p>المسار المطلوب غير موجود.</p>
+        <p>
+          المسار المطلوب غير موجود.
+        </p>
       </main>
     </body>
     </html>
@@ -1667,18 +2507,20 @@ app.use((req, res) => {
 =========================================================
 */
 
-app.use((error, req, res, next) => {
-  console.error(error);
+app.use(
+  (error, req, res, next) => {
+    console.error(error);
 
-  if (res.headersSent) {
-    return next(error);
+    if (res.headersSent) {
+      return next(error);
+    }
+
+    res.status(500).json({
+      success: false,
+      error: "INTERNAL_SERVER_ERROR"
+    });
   }
-
-  res.status(500).json({
-    success: false,
-    error: "INTERNAL_SERVER_ERROR"
-  });
-});
+);
 
 /*
 =========================================================
@@ -1690,30 +2532,54 @@ async function start() {
   try {
     await initializeDatabase();
 
-    app.listen(PORT, "0.0.0.0", () => {
-      console.log("");
-      console.log("==========================================");
-      console.log(" EZ MEDIA");
-      console.log(" Platform:", PLATFORM_VERSION);
-      console.log(" Port:", PORT);
-      console.log(" URL:", APP_URL);
-      console.log(" Database:", pool ? "configured" : "not configured");
-      console.log("==========================================");
-      console.log("");
-    });
+    app.listen(
+      PORT,
+      "0.0.0.0",
+      () => {
+        console.log("");
+        console.log(
+          "=========================================="
+        );
+        console.log(" EZ MEDIA");
+        console.log(
+          " Version:",
+          PLATFORM_VERSION
+        );
+        console.log(
+          " Port:",
+          PORT
+        );
+        console.log(
+          " URL:",
+          APP_URL
+        );
+        console.log(
+          " Database:",
+          pool
+            ? "configured"
+            : "not configured"
+        );
+        console.log(
+          "=========================================="
+        );
+        console.log("");
+      }
+    );
   } catch (error) {
-    console.error("Startup error:", error);
+    console.error(
+      "Startup error:",
+      error
+    );
 
-    /*
-      لا نوقف السيرفر بالكامل إذا كانت قاعدة البيانات
-      غير متاحة مؤقتًا؛ الواجهة والـhealth يمكن أن يعملوا.
-    */
-
-    app.listen(PORT, "0.0.0.0", () => {
-      console.log(
-        `EZ MEDIA started without database on port ${PORT}`
-      );
-    });
+    app.listen(
+      PORT,
+      "0.0.0.0",
+      () => {
+        console.log(
+          `EZ MEDIA started without database on port ${PORT}`
+        );
+      }
+    );
   }
 }
 
@@ -1726,7 +2592,9 @@ start();
 */
 
 async function shutdown(signal) {
-  console.log(`${signal} received.`);
+  console.log(
+    `${signal} received.`
+  );
 
   if (pool) {
     await pool.end();
@@ -1735,5 +2603,12 @@ async function shutdown(signal) {
   process.exit(0);
 }
 
-process.on("SIGTERM", () => shutdown("SIGTERM"));
-process.on("SIGINT", () => shutdown("SIGINT"));
+process.on(
+  "SIGTERM",
+  () => shutdown("SIGTERM")
+);
+
+process.on(
+  "SIGINT",
+  () => shutdown("SIGINT")
+);
