@@ -5,611 +5,601 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
   <title>EZ MEDIA | منصة الإعلام الرقمي وصناعة المحتوى</title>
-
-  <meta
-    name="description"
-    content="EZ MEDIA منصة الإعلام الرقمي وصناعة المحتوى، للتغطيات الميدانية والإنتاج المرئي والبودكاست والبث المباشر."
-  >
-
-  <meta name="theme-color" content="#06b6d4">
+  <meta name="description" content="EZ MEDIA منصة إعلامية رقمية لصناعة المحتوى والتغطيات والبودكاست والبث والإعلانات والرعاية.">
+  <meta name="theme-color" content="#eef9ff">
 
   <style>
-    * {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
+    :root{
+      --white:#ffffff;
+      --ice:#f7fcff;
+      --sky:#e9f7ff;
+      --sky2:#cceeff;
+      --blue:#55bff2;
+      --blue2:#168fd0;
+      --deep:#075b88;
+      --text:#17384c;
+      --muted:#5d7888;
+      --border:#d9edf7;
+      --shadow:0 12px 35px rgba(37,145,195,.12);
+      --radius:24px;
     }
 
-    :root {
-      --blue: #2563eb;
-      --cyan: #06b6d4;
-      --sky: #38bdf8;
-      --light: #f7fcff;
-      --white: #ffffff;
-      --text: #12304a;
-      --muted: #60788d;
-      --border: #dceff8;
-      --shadow: 0 12px 35px rgba(37, 99, 235, 0.10);
+    *{
+      box-sizing:border-box;
+      margin:0;
+      padding:0;
     }
 
-    html {
-      scroll-behavior: smooth;
+    html{
+      scroll-behavior:smooth;
     }
 
-    body {
-      font-family:
-        -apple-system,
-        BlinkMacSystemFont,
-        "Segoe UI",
-        Tahoma,
-        Arial,
-        sans-serif;
-      background: var(--light);
-      color: var(--text);
-      line-height: 1.7;
+    body{
+      font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Tahoma,Arial,sans-serif;
+      background:
+        radial-gradient(circle at top right,#dff5ff 0,transparent 32%),
+        linear-gradient(180deg,#ffffff,#f4fbff);
+      color:var(--text);
+      line-height:1.8;
     }
 
-    a {
-      color: inherit;
-      text-decoration: none;
+    a{
+      color:inherit;
+      text-decoration:none;
     }
 
     button,
-    input {
-      font: inherit;
+    input,
+    textarea,
+    select{
+      font:inherit;
     }
 
-    .container {
-      width: min(1180px, calc(100% - 32px));
-      margin: auto;
+    .container{
+      width:min(1400px,92%);
+      margin:auto;
     }
 
     /* HEADER */
 
-    header {
-      position: sticky;
-      top: 0;
-      z-index: 1000;
-      background: rgba(255,255,255,.94);
-      backdrop-filter: blur(15px);
-      border-bottom: 1px solid var(--border);
+    header{
+      position:sticky;
+      top:0;
+      z-index:1000;
+      background:rgba(255,255,255,.92);
+      backdrop-filter:blur(18px);
+      border-bottom:1px solid var(--border);
     }
 
-    .nav {
-      min-height: 76px;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 20px;
+    .nav{
+      min-height:76px;
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:20px;
     }
 
-    .logo {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-      font-weight: 900;
-      font-size: 22px;
+    .brand{
+      display:flex;
+      align-items:center;
+      gap:12px;
+      font-weight:900;
+      font-size:24px;
+      color:var(--deep);
     }
 
-    .logo-mark {
-      width: 46px;
-      height: 46px;
-      border-radius: 14px;
-      display: grid;
-      place-items: center;
-      color: white;
-      background: linear-gradient(135deg, var(--blue), var(--cyan), var(--sky));
-      box-shadow: 0 10px 25px rgba(6,182,212,.25);
+    .brand-logo{
+      width:46px;
+      height:46px;
+      border-radius:15px;
+      display:grid;
+      place-items:center;
+      background:linear-gradient(135deg,#ffffff,#bdeaff);
+      box-shadow:0 8px 25px rgba(35,166,220,.22);
+      color:#078ac8;
+      font-weight:1000;
     }
 
-    .nav-links {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      flex-wrap: wrap;
+    nav{
+      display:flex;
+      align-items:center;
+      gap:8px;
+      overflow-x:auto;
+      scrollbar-width:none;
     }
 
-    .nav-links a {
-      padding: 9px 13px;
-      border-radius: 10px;
-      color: var(--muted);
-      font-size: 14px;
-      font-weight: 700;
+    nav::-webkit-scrollbar{
+      display:none;
     }
 
-    .nav-links a:hover {
-      color: var(--blue);
-      background: #eefaff;
+    nav a{
+      white-space:nowrap;
+      padding:10px 14px;
+      border-radius:14px;
+      color:var(--muted);
+      font-weight:700;
     }
 
-    .menu-btn {
-      display: none;
-      border: 0;
-      background: #eefaff;
-      color: var(--blue);
-      padding: 10px 13px;
-      border-radius: 10px;
-      cursor: pointer;
+    nav a:hover{
+      background:var(--sky);
+      color:var(--deep);
+    }
+
+    .admin-btn{
+      border:0;
+      cursor:pointer;
+      background:linear-gradient(135deg,#dff6ff,#aee5ff);
+      color:#075b88;
+      padding:11px 16px;
+      border-radius:15px;
+      font-weight:900;
     }
 
     /* HERO */
 
-    .hero {
-      position: relative;
-      overflow: hidden;
-      padding: 90px 0 70px;
+    .hero{
+      padding:60px 0 35px;
+    }
+
+    .hero-box{
+      min-height:430px;
+      border-radius:36px;
+      padding:55px;
+      position:relative;
+      overflow:hidden;
+      display:flex;
+      align-items:center;
       background:
-        radial-gradient(circle at 15% 20%, rgba(56,189,248,.22), transparent 30%),
-        radial-gradient(circle at 85% 10%, rgba(37,99,235,.18), transparent 32%),
-        linear-gradient(135deg, #ffffff, #effaff, #f8fdff);
+        linear-gradient(115deg,rgba(255,255,255,.98),rgba(215,244,255,.83)),
+        linear-gradient(135deg,#fff,#d9f4ff);
+      border:1px solid var(--border);
+      box-shadow:var(--shadow);
     }
 
-    .hero-grid {
-      display: grid;
-      grid-template-columns: 1.2fr .8fr;
-      gap: 50px;
-      align-items: center;
+    .hero-box::before{
+      content:"";
+      position:absolute;
+      width:480px;
+      height:480px;
+      border-radius:50%;
+      background:radial-gradient(circle,#86d8ff55,transparent 68%);
+      left:-80px;
+      bottom:-160px;
     }
 
-    .eyebrow {
-      display: inline-flex;
-      align-items: center;
-      gap: 8px;
-      padding: 7px 13px;
-      border-radius: 999px;
-      background: #e9faff;
-      color: var(--blue);
-      font-weight: 800;
-      font-size: 13px;
-      margin-bottom: 20px;
+    .hero-content{
+      max-width:780px;
+      position:relative;
+      z-index:2;
     }
 
-    .hero h1 {
-      font-size: clamp(42px, 7vw, 78px);
-      line-height: 1;
-      letter-spacing: -3px;
-      margin-bottom: 22px;
-      background: linear-gradient(90deg, #155eef, #06a9d1, #38bdf8);
-      -webkit-background-clip: text;
-      background-clip: text;
-      color: transparent;
+    .eyebrow{
+      display:inline-flex;
+      padding:8px 14px;
+      border-radius:999px;
+      background:#ffffffc9;
+      color:var(--blue2);
+      border:1px solid var(--border);
+      font-weight:900;
+      margin-bottom:18px;
     }
 
-    .hero h2 {
-      font-size: clamp(22px, 3vw, 34px);
-      margin-bottom: 16px;
+    h1{
+      font-size:clamp(42px,7vw,82px);
+      line-height:1.05;
+      letter-spacing:-3px;
+      margin-bottom:20px;
     }
 
-    .hero p {
-      max-width: 680px;
-      color: var(--muted);
-      font-size: 18px;
+    .gradient-text{
+      background:linear-gradient(90deg,#087eb8,#65cef7);
+      -webkit-background-clip:text;
+      background-clip:text;
+      color:transparent;
     }
 
-    .hero-actions {
-      display: flex;
-      gap: 12px;
-      margin-top: 30px;
-      flex-wrap: wrap;
+    .hero p{
+      font-size:20px;
+      color:var(--muted);
+      max-width:700px;
     }
 
-    .btn {
-      border: 0;
-      cursor: pointer;
-      padding: 13px 20px;
-      border-radius: 12px;
-      font-weight: 800;
-      transition: .2s;
+    .hero-actions{
+      display:flex;
+      gap:12px;
+      flex-wrap:wrap;
+      margin-top:28px;
     }
 
-    .btn-primary {
-      color: white;
-      background: linear-gradient(135deg, var(--blue), var(--cyan));
-      box-shadow: 0 12px 25px rgba(37,99,235,.20);
+    .btn{
+      border:0;
+      cursor:pointer;
+      padding:13px 22px;
+      border-radius:16px;
+      font-weight:900;
+      transition:.2s;
     }
 
-    .btn-secondary {
-      color: var(--blue);
-      background: white;
-      border: 1px solid var(--border);
+    .btn:hover{
+      transform:translateY(-2px);
     }
 
-    .btn:hover {
-      transform: translateY(-2px);
+    .btn-primary{
+      color:#fff;
+      background:linear-gradient(135deg,#159bd8,#4fc8f4);
+      box-shadow:0 10px 25px rgba(21,155,216,.2);
     }
 
-    .hero-card {
-      background: rgba(255,255,255,.9);
-      border: 1px solid var(--border);
-      border-radius: 28px;
-      padding: 30px;
-      box-shadow: var(--shadow);
-    }
-
-    .hero-card-title {
-      font-weight: 900;
-      font-size: 22px;
-      margin-bottom: 20px;
-    }
-
-    .live-indicator {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      color: #0b8aab;
-      font-weight: 800;
-      margin-bottom: 20px;
-    }
-
-    .dot {
-      width: 10px;
-      height: 10px;
-      background: #06b6d4;
-      border-radius: 50%;
-      box-shadow: 0 0 0 7px rgba(6,182,212,.12);
-    }
-
-    .hero-stat {
-      display: grid;
-      grid-template-columns: repeat(2, 1fr);
-      gap: 12px;
-    }
-
-    .stat-box {
-      padding: 17px;
-      border-radius: 17px;
-      background: #f2fbff;
-      border: 1px solid var(--border);
-    }
-
-    .stat-box strong {
-      display: block;
-      font-size: 25px;
-      color: var(--blue);
-    }
-
-    .stat-box span {
-      color: var(--muted);
-      font-size: 13px;
+    .btn-light{
+      background:#fff;
+      color:var(--deep);
+      border:1px solid var(--border);
     }
 
     /* SECTIONS */
 
-    section {
-      padding: 70px 0;
+    .section{
+      padding:35px 0;
     }
 
-    .section-head {
-      display: flex;
-      align-items: end;
-      justify-content: space-between;
-      gap: 20px;
-      margin-bottom: 28px;
+    .section-head{
+      display:flex;
+      align-items:end;
+      justify-content:space-between;
+      gap:20px;
+      margin-bottom:20px;
     }
 
-    .section-head h2 {
-      font-size: 30px;
+    .section-head h2{
+      font-size:30px;
     }
 
-    .section-head p {
-      color: var(--muted);
-      margin-top: 5px;
+    .section-head p{
+      color:var(--muted);
     }
 
-    /* STATS */
+    /* FULL BANNER */
 
-    .stats {
-      margin-top: -25px;
-      position: relative;
-      z-index: 2;
+    .media-banner{
+      min-height:230px;
+      width:100%;
+      border-radius:28px;
+      padding:30px;
+      margin-bottom:22px;
+      position:relative;
+      overflow:hidden;
+      display:flex;
+      align-items:end;
+      background:
+        linear-gradient(120deg,#ffffff 0%,#e2f6ff 48%,#c5edff 100%);
+      border:1px solid var(--border);
+      box-shadow:var(--shadow);
     }
 
-    .stats-grid {
-      display: grid;
-      grid-template-columns: repeat(4, 1fr);
-      gap: 15px;
+    .media-banner::after{
+      content:"";
+      position:absolute;
+      width:320px;
+      height:320px;
+      border-radius:50%;
+      background:radial-gradient(circle,#55bff255,transparent 68%);
+      left:5%;
+      top:-160px;
     }
 
-    .big-stat {
-      background: white;
-      border: 1px solid var(--border);
-      border-radius: 20px;
-      padding: 25px;
-      text-align: center;
-      box-shadow: var(--shadow);
+    .media-banner-content{
+      position:relative;
+      z-index:2;
     }
 
-    .big-stat strong {
-      display: block;
-      font-size: 32px;
-      color: var(--blue);
+    .media-banner h3{
+      font-size:34px;
+      margin-bottom:8px;
     }
 
-    .big-stat span {
-      color: var(--muted);
-      font-size: 14px;
+    .media-banner p{
+      color:var(--muted);
     }
 
-    /* SECTIONS GRID */
+    /* GRID */
 
-    .sections-grid {
-      display: grid;
-      grid-template-columns: repeat(4, 1fr);
-      gap: 15px;
+    .grid{
+      display:grid;
+      grid-template-columns:repeat(3,1fr);
+      gap:18px;
     }
 
-    .media-card {
-      background: white;
-      border: 1px solid var(--border);
-      border-radius: 18px;
-      padding: 20px;
-      box-shadow: 0 8px 25px rgba(37,99,235,.06);
-      transition: .2s;
+    .card{
+      background:#fff;
+      border:1px solid var(--border);
+      border-radius:22px;
+      padding:22px;
+      box-shadow:0 8px 25px rgba(37,145,195,.07);
+      transition:.2s;
     }
 
-    .media-card:hover {
-      transform: translateY(-4px);
-      border-color: #9ddff0;
+    .card:hover{
+      transform:translateY(-4px);
+      box-shadow:var(--shadow);
     }
 
-    .card-icon {
-      width: 44px;
-      height: 44px;
-      display: grid;
-      place-items: center;
-      border-radius: 13px;
-      background: linear-gradient(135deg, #eaf8ff, #e8fbff);
-      color: var(--blue);
-      font-size: 20px;
-      margin-bottom: 14px;
+    .card-icon{
+      width:52px;
+      height:52px;
+      border-radius:17px;
+      display:grid;
+      place-items:center;
+      background:linear-gradient(135deg,#effaff,#c9efff);
+      font-size:24px;
+      margin-bottom:15px;
     }
 
-    .media-card h3 {
-      font-size: 17px;
-      margin-bottom: 5px;
+    .card h3{
+      margin-bottom:7px;
     }
 
-    .media-card p {
-      color: var(--muted);
-      font-size: 13px;
+    .card p{
+      color:var(--muted);
+    }
+
+    .branch-list{
+      margin-top:15px;
+      display:flex;
+      flex-wrap:wrap;
+      gap:7px;
+    }
+
+    .branch{
+      background:var(--ice);
+      border:1px solid var(--border);
+      padding:6px 10px;
+      border-radius:10px;
+      font-size:13px;
+      color:var(--deep);
     }
 
     /* CONTENT */
 
-    .content-grid {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 18px;
+    .content-card{
+      overflow:hidden;
+      padding:0;
     }
 
-    .content-card {
-      overflow: hidden;
-      background: white;
-      border: 1px solid var(--border);
-      border-radius: 20px;
-      box-shadow: var(--shadow);
+    .content-cover{
+      height:190px;
+      background:linear-gradient(135deg,#e7f8ff,#bceaff);
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      font-size:50px;
     }
 
-    .content-cover {
-      height: 170px;
-      display: grid;
-      place-items: center;
-      background: linear-gradient(135deg, #dff7ff, #e9f1ff, #e4fbff);
-      color: var(--blue);
-      font-size: 42px;
+    .content-body{
+      padding:20px;
     }
 
-    .content-body {
-      padding: 20px;
+    .tag{
+      display:inline-block;
+      padding:5px 9px;
+      border-radius:8px;
+      background:var(--sky);
+      color:var(--blue2);
+      font-size:12px;
+      font-weight:900;
+      margin-bottom:8px;
     }
 
-    .content-type {
-      color: var(--cyan);
-      font-size: 12px;
-      font-weight: 900;
-      margin-bottom: 6px;
+    /* ADS */
+
+    .ad-banner{
+      width:100%;
+      min-height:180px;
+      padding:30px;
+      border-radius:26px;
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:25px;
+      background:linear-gradient(110deg,#ffffff,#d8f3ff,#edfaff);
+      border:1px solid var(--border);
+      box-shadow:var(--shadow);
     }
 
-    .content-body h3 {
-      margin-bottom: 8px;
+    .sponsor{
+      font-size:13px;
+      color:var(--muted);
+      margin-bottom:8px;
     }
 
-    .content-body p {
-      color: var(--muted);
-      font-size: 14px;
+    /* SOCIAL */
+
+    .social-grid{
+      display:grid;
+      grid-template-columns:repeat(5,1fr);
+      gap:12px;
     }
 
-    /* LIVE */
-
-    .live-box {
-      min-height: 300px;
-      border-radius: 25px;
-      padding: 35px;
-      display: grid;
-      place-items: center;
-      text-align: center;
-      background:
-        radial-gradient(circle at center, rgba(56,189,248,.20), transparent 40%),
-        linear-gradient(135deg, #effbff, #edf5ff);
-      border: 1px solid var(--border);
+    .social{
+      padding:17px;
+      background:#fff;
+      border:1px solid var(--border);
+      border-radius:18px;
+      text-align:center;
+      font-weight:900;
     }
 
-    .live-box h2 {
-      margin-bottom: 10px;
-    }
-
-    .live-box p {
-      color: var(--muted);
-    }
-
-    /* SEARCH */
-
-    .search-box {
-      display: flex;
-      gap: 10px;
-      margin-bottom: 25px;
-    }
-
-    .search-box input {
-      flex: 1;
-      min-width: 0;
-      border: 1px solid var(--border);
-      background: white;
-      border-radius: 12px;
-      padding: 13px 16px;
-      outline: none;
-    }
-
-    .search-box input:focus {
-      border-color: var(--cyan);
-      box-shadow: 0 0 0 4px rgba(6,182,212,.08);
+    .social:hover{
+      background:var(--sky);
     }
 
     /* FOOTER */
 
-    footer {
-      padding: 50px 0 30px;
-      background: linear-gradient(135deg, #effbff, #eef5ff);
-      border-top: 1px solid var(--border);
+    footer{
+      margin-top:45px;
+      padding:45px 0 25px;
+      background:linear-gradient(180deg,#effaff,#e2f6ff);
+      border-top:1px solid var(--border);
     }
 
-    .footer-grid {
-      display: grid;
-      grid-template-columns: 1.5fr 1fr 1fr;
-      gap: 35px;
-    }
-
-    footer h3 {
-      margin-bottom: 12px;
+    .footer-grid{
+      display:grid;
+      grid-template-columns:2fr 1fr 1fr 1fr;
+      gap:30px;
     }
 
     footer p,
-    footer a {
-      color: var(--muted);
-      font-size: 14px;
+    footer a{
+      color:var(--muted);
     }
 
-    footer a {
-      display: block;
-      margin: 7px 0;
+    .copyright{
+      margin-top:30px;
+      padding-top:20px;
+      border-top:1px solid var(--border);
+      text-align:center;
+      color:var(--muted);
     }
 
-    .copyright {
-      text-align: center;
-      color: var(--muted);
-      border-top: 1px solid var(--border);
-      margin-top: 35px;
-      padding-top: 20px;
-      font-size: 13px;
+    /* ADMIN */
+
+    .modal{
+      position:fixed;
+      inset:0;
+      background:rgba(7,91,136,.18);
+      backdrop-filter:blur(8px);
+      z-index:3000;
+      display:none;
+      padding:20px;
+      overflow:auto;
     }
 
-    .status {
-      display: inline-flex;
-      align-items: center;
-      gap: 8px;
-      padding: 7px 11px;
-      border-radius: 999px;
-      background: #eafaff;
-      color: #087ea1;
-      font-size: 12px;
-      font-weight: 800;
+    .modal.open{
+      display:block;
     }
 
-    .empty {
-      grid-column: 1 / -1;
-      text-align: center;
-      padding: 45px;
-      color: var(--muted);
-      background: white;
-      border: 1px dashed #b9dfeb;
-      border-radius: 18px;
+    .admin-panel{
+      width:min(1100px,100%);
+      margin:30px auto;
+      background:#fff;
+      border:1px solid var(--border);
+      border-radius:30px;
+      box-shadow:0 25px 70px rgba(0,90,140,.2);
+      padding:30px;
     }
 
-    /* MOBILE */
+    .admin-head{
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:20px;
+      margin-bottom:25px;
+    }
 
-    @media (max-width: 900px) {
-      .hero-grid {
-        grid-template-columns: 1fr;
+    .close{
+      border:0;
+      background:var(--sky);
+      color:var(--deep);
+      width:42px;
+      height:42px;
+      border-radius:13px;
+      cursor:pointer;
+      font-size:20px;
+    }
+
+    .form-grid{
+      display:grid;
+      grid-template-columns:repeat(2,1fr);
+      gap:15px;
+    }
+
+    .field{
+      display:flex;
+      flex-direction:column;
+      gap:7px;
+    }
+
+    .field.full{
+      grid-column:1/-1;
+    }
+
+    .field label{
+      font-weight:900;
+    }
+
+    .field input,
+    .field textarea,
+    .field select{
+      border:1px solid var(--border);
+      border-radius:14px;
+      padding:12px 14px;
+      background:#fbfeff;
+      color:var(--text);
+      outline:none;
+    }
+
+    .field textarea{
+      min-height:130px;
+      resize:vertical;
+    }
+
+    .status{
+      margin-top:18px;
+      padding:13px 15px;
+      border-radius:14px;
+      background:var(--sky);
+      color:var(--deep);
+      font-weight:800;
+    }
+
+    /* RESPONSIVE */
+
+    @media(max-width:1000px){
+      .grid{
+        grid-template-columns:repeat(2,1fr);
       }
 
-      .sections-grid {
-        grid-template-columns: repeat(3, 1fr);
+      .social-grid{
+        grid-template-columns:repeat(3,1fr);
       }
 
-      .stats-grid {
-        grid-template-columns: repeat(2, 1fr);
-      }
-
-      .content-grid {
-        grid-template-columns: repeat(2, 1fr);
-      }
-
-      .footer-grid {
-        grid-template-columns: 1fr 1fr;
+      .footer-grid{
+        grid-template-columns:repeat(2,1fr);
       }
     }
 
-    @media (max-width: 650px) {
-      .container {
-        width: min(100% - 22px, 1180px);
+    @media(max-width:700px){
+      .nav{
+        flex-wrap:wrap;
+        padding:12px 0;
       }
 
-      .nav {
-        min-height: 68px;
+      nav{
+        width:100%;
+        order:3;
       }
 
-      .menu-btn {
-        display: block;
+      .hero-box{
+        padding:30px;
+        min-height:400px;
       }
 
-      .nav-links {
-        display: none;
-        position: absolute;
-        top: 68px;
-        right: 11px;
-        left: 11px;
-        padding: 12px;
-        background: white;
-        border: 1px solid var(--border);
-        border-radius: 15px;
-        box-shadow: var(--shadow);
-        flex-direction: column;
-        align-items: stretch;
+      h1{
+        letter-spacing:-1px;
       }
 
-      .nav-links.open {
-        display: flex;
+      .grid,
+      .form-grid,
+      .footer-grid{
+        grid-template-columns:1fr;
       }
 
-      .nav-links a {
-        text-align: center;
+      .social-grid{
+        grid-template-columns:repeat(2,1fr);
       }
 
-      .hero {
-        padding: 60px 0;
-      }
-
-      .hero h1 {
-        letter-spacing: -2px;
-      }
-
-      .sections-grid,
-      .content-grid,
-      .stats-grid {
-        grid-template-columns: 1fr;
-      }
-
-      .footer-grid {
-        grid-template-columns: 1fr;
-      }
-
-      .section-head {
-        align-items: start;
-        flex-direction: column;
-      }
-
-      .search-box {
-        flex-direction: column;
+      .ad-banner{
+        flex-direction:column;
+        align-items:flex-start;
       }
     }
   </style>
@@ -620,129 +610,64 @@
 <header>
   <div class="container nav">
 
-    <a class="logo" href="/">
-      <span class="logo-mark">EZ</span>
+    <a href="#home" class="brand">
+      <span class="brand-logo">EZ</span>
       <span>EZ MEDIA</span>
     </a>
 
-    <button
-      class="menu-btn"
-      id="menuBtn"
-      type="button"
-      aria-label="فتح القائمة"
-    >
-      ☰
-    </button>
-
-    <nav class="nav-links" id="navLinks">
+    <nav>
       <a href="#home">الرئيسية</a>
       <a href="#sections">الأقسام</a>
       <a href="#content">المحتوى</a>
-      <a href="#live">البث المباشر</a>
-      <a href="#services">الخدمات</a>
-      <a href="#search">البحث</a>
+      <a href="#ads">الإعلانات</a>
+      <a href="#sponsors">الرعاية</a>
+      <a href="#social">منصاتي</a>
     </nav>
+
+    <button class="admin-btn" onclick="openAdmin()">
+      إدارة المنصة
+    </button>
 
   </div>
 </header>
+
 
 <main id="home">
 
   <!-- HERO -->
 
   <section class="hero">
-    <div class="container hero-grid">
-
-      <div>
-        <div class="eyebrow">
-          ● منصة إعلامية رقمية
-        </div>
-
-        <h1>EZ MEDIA</h1>
-
-        <h2>منصة الإعلام الرقمي وصناعة المحتوى</h2>
-
-        <p>
-          تغطيات ميدانية، إنتاج مرئي ذكي، بودكاست، بث مباشر،
-          محتوى رقمي وخدمات إعلامية ضمن منصة واحدة.
-        </p>
-
-        <div class="hero-actions">
-          <a href="#content" class="btn btn-primary">
-            استكشف المحتوى
-          </a>
-
-          <a href="#services" class="btn btn-secondary">
-            خدمات EZ MEDIA
-          </a>
-        </div>
-      </div>
-
-      <div class="hero-card">
-
-        <div class="live-indicator">
-          <span class="dot"></span>
-          EZ MEDIA ONLINE
-        </div>
-
-        <div class="hero-card-title">
-          غرفة الإعلام الرقمي
-        </div>
-
-        <div class="hero-stat">
-
-          <div class="stat-box">
-            <strong id="sectionCount">30+</strong>
-            <span>قسم إعلامي</span>
-          </div>
-
-          <div class="stat-box">
-            <strong id="contentCount">0</strong>
-            <span>محتوى منشور</span>
-          </div>
-
-          <div class="stat-box">
-            <strong>24/7</strong>
-            <span>جاهزية رقمية</span>
-          </div>
-
-          <div class="stat-box">
-            <strong>AI</strong>
-            <span>معالجة ذكية</span>
-          </div>
-
-        </div>
-
-      </div>
-
-    </div>
-  </section>
-
-  <!-- STATS -->
-
-  <section class="stats">
     <div class="container">
 
-      <div class="stats-grid">
+      <div class="hero-box">
 
-        <div class="big-stat">
-          <strong id="statSections">30+</strong>
-          <span>الأقسام</span>
-        </div>
+        <div class="hero-content">
 
-        <div class="big-stat">
-          <strong id="statContent">0</strong>
-          <span>المحتوى</span>
-        </div>
+          <span class="eyebrow">
+            منصة إعلامية رقمية متكاملة
+          </span>
 
-        <div class="big-stat">
-          <strong id="statMedia">0</strong>
-          <span>الوسائط</span>
-        </div>
+          <h1>
+            <span class="gradient-text">EZ MEDIA</span>
+            <br>
+            الإعلام يصنع الحضور
+          </h1>
 
-        <div class="big-stat">
-          <strong id="statSources">0</strong>
-          <span>المصادر</span>
+          <p>
+            منصة الإعلام الرقمي وصناعة المحتوى والتغطيات والإنتاج والبودكاست
+            والبث والإعلانات والرعاية، مع إدارة مركزية للمحتوى والأقسام.
+          </p>
+
+          <div class="hero-actions">
+            <a class="btn btn-primary" href="#content">
+              استكشف المحتوى
+            </a>
+
+            <button class="btn btn-light" onclick="openAdmin()">
+              أضف تغطية جديدة
+            </button>
+          </div>
+
         </div>
 
       </div>
@@ -750,242 +675,193 @@
     </div>
   </section>
 
-  <!-- SECTIONS -->
 
-  <section id="sections">
+  <!-- 30 SECTIONS -->
+
+  <section class="section" id="sections">
+
     <div class="container">
 
       <div class="section-head">
         <div>
           <h2>أقسام EZ MEDIA</h2>
-          <p>منظومة إعلامية متعددة المجالات.</p>
+          <p>30 قسمًا رئيسيًا، والفروع تظهر داخل القسم عند الدخول.</p>
         </div>
-
-        <span class="status">
-          ● النظام يعمل
-        </span>
       </div>
 
-      <div class="sections-grid" id="sectionsGrid">
-
-        <div class="media-card">
-          <div class="card-icon">📰</div>
-          <h3>الأخبار</h3>
-          <p>آخر الأخبار والتحديثات.</p>
-        </div>
-
-        <div class="media-card">
-          <div class="card-icon">🎥</div>
-          <h3>الفيديو</h3>
-          <p>إنتاج ومحتوى مرئي.</p>
-        </div>
-
-        <div class="media-card">
-          <div class="card-icon">🎙️</div>
-          <h3>البودكاست</h3>
-          <p>برامج وحلقات صوتية.</p>
-        </div>
-
-        <div class="media-card">
-          <div class="card-icon">📡</div>
-          <h3>البث المباشر</h3>
-          <p>فعاليات وتغطيات مباشرة.</p>
-        </div>
-
-      </div>
+      <div id="sectionsGrid" class="grid"></div>
 
     </div>
+
   </section>
 
-  <!-- CONTENT -->
 
-  <section id="content">
+  <!-- FEATURED CONTENT -->
+
+  <section class="section" id="content">
+
     <div class="container">
 
       <div class="section-head">
         <div>
-          <h2>أحدث المحتوى</h2>
-          <p>آخر ما يتم نشره على المنصة.</p>
+          <h2>أحدث المحتوى والتغطيات</h2>
+          <p>المحتوى الذي تنشره من لوحة الإدارة يظهر هنا.</p>
         </div>
       </div>
 
-      <div class="content-grid" id="contentGrid">
+      <div class="media-banner">
 
-        <div class="empty">
-          جاري تحميل المحتوى...
-        </div>
-
-      </div>
-
-    </div>
-  </section>
-
-  <!-- LIVE -->
-
-  <section id="live">
-    <div class="container">
-
-      <div class="section-head">
-        <div>
-          <h2>البث المباشر</h2>
-          <p>مساحة مخصصة للبث والتغطيات المباشرة.</p>
-        </div>
-      </div>
-
-      <div class="live-box">
-
-        <div>
-          <div class="card-icon" style="margin:0 auto 15px;">
-            📡
-          </div>
-
-          <h2>EZ MEDIA LIVE</h2>
-
+        <div class="media-banner-content">
+          <span class="tag">التغطيات الإعلامية</span>
+          <h3>محتواك أنت في واجهة المنصة</h3>
           <p>
-            سيتم تشغيل البث عند توفر مصدر بث مباشر فعلي.
+            أضف التغطية، اختر القسم والفرع، ثم انشرها لتظهر في المكان المناسب.
+          </p>
+        </div>
+
+      </div>
+
+      <div id="contentGrid" class="grid"></div>
+
+    </div>
+
+  </section>
+
+
+  <!-- ADVERTISING -->
+
+  <section class="section" id="ads">
+
+    <div class="container">
+
+      <div class="section-head">
+        <div>
+          <h2>الإعلانات</h2>
+          <p>مساحات إعلانية قابلة للإدارة والتحديث.</p>
+        </div>
+      </div>
+
+      <div class="ad-banner">
+
+        <div>
+          <div class="sponsor">مساحة إعلانية</div>
+          <h3>أعلن عبر EZ MEDIA</h3>
+          <p>
+            ظهور إعلاني داخل المنصة والأقسام والتغطيات.
+          </p>
+        </div>
+
+        <button class="btn btn-primary" onclick="contactUs()">
+          تواصل للإعلان
+        </button>
+
+      </div>
+
+    </div>
+
+  </section>
+
+
+  <!-- SPONSORS -->
+
+  <section class="section" id="sponsors">
+
+    <div class="container">
+
+      <div class="media-banner">
+
+        <div class="media-banner-content">
+          <span class="tag">الرعاية والشراكات</span>
+          <h3>شراكة إعلامية مع EZ MEDIA</h3>
+          <p>
+            مساحة مخصصة للرعاة والشركاء والحملات الإعلامية.
           </p>
         </div>
 
       </div>
 
     </div>
+
   </section>
 
-  <!-- SERVICES -->
 
-  <section id="services">
+  <!-- SOCIAL -->
+
+  <section class="section" id="social">
+
     <div class="container">
 
       <div class="section-head">
         <div>
-          <h2>خدمات EZ MEDIA</h2>
-          <p>حلول إعلامية وصناعة محتوى.</p>
+          <h2>منصاتي</h2>
+          <p>روابط منصات EZ MEDIA وصانع المحتوى.</p>
         </div>
       </div>
 
-      <div class="sections-grid">
+      <div class="social-grid">
 
-        <div class="media-card">
-          <div class="card-icon">🎬</div>
-          <h3>الإنتاج المرئي</h3>
-          <p>إنتاج وتصوير وتحرير المحتوى المرئي.</p>
-        </div>
+        <a class="social" href="https://www.snapchat.com/add/arb.200" target="_blank">
+          Snapchat
+        </a>
 
-        <div class="media-card">
-          <div class="card-icon">📸</div>
-          <h3>التغطيات الميدانية</h3>
-          <p>تغطية الفعاليات والمناسبات.</p>
-        </div>
+        <a class="social" href="https://www.tiktok.com/@arb.20000" target="_blank">
+          TikTok
+        </a>
 
-        <div class="media-card">
-          <div class="card-icon">📢</div>
-          <h3>الإعلانات</h3>
-          <p>حلول وحملات إعلانية رقمية.</p>
-        </div>
+        <a class="social" href="https://www.instagram.com/arb.20000" target="_blank">
+          Instagram
+        </a>
 
-        <div class="media-card">
-          <div class="card-icon">🎙️</div>
-          <h3>البودكاست</h3>
-          <p>إنتاج البرامج والحلقات الصوتية.</p>
-        </div>
+        <a class="social" href="https://www.youtube.com/@arb.200" target="_blank">
+          YouTube
+        </a>
 
-        <div class="media-card">
-          <div class="card-icon">📱</div>
-          <h3>إدارة المحتوى</h3>
-          <p>إدارة وتطوير المحتوى الرقمي.</p>
-        </div>
-
-        <div class="media-card">
-          <div class="card-icon">🤖</div>
-          <h3>الأتمتة والذكاء الاصطناعي</h3>
-          <p>أتمتة عمليات المحتوى والتوزيع.</p>
-        </div>
-
-        <div class="media-card">
-          <div class="card-icon">🔎</div>
-          <h3>SEO</h3>
-          <p>تحسين ظهور المحتوى في محركات البحث.</p>
-        </div>
-
-        <div class="media-card">
-          <div class="card-icon">📊</div>
-          <h3>التحليلات</h3>
-          <p>قياس الأداء والوصول والتفاعل.</p>
-        </div>
+        <a class="social" href="https://x.com/arb200300" target="_blank">
+          X
+        </a>
 
       </div>
 
     </div>
-  </section>
 
-  <!-- SEARCH -->
-
-  <section id="search">
-    <div class="container">
-
-      <div class="section-head">
-        <div>
-          <h2>البحث في EZ MEDIA</h2>
-          <p>ابحث داخل المحتوى المنشور.</p>
-        </div>
-      </div>
-
-      <div class="search-box">
-
-        <input
-          id="searchInput"
-          type="search"
-          placeholder="اكتب كلمة البحث..."
-          aria-label="البحث"
-        >
-
-        <button
-          id="searchBtn"
-          class="btn btn-primary"
-          type="button"
-        >
-          بحث
-        </button>
-
-      </div>
-
-      <div class="content-grid" id="searchResults"></div>
-
-    </div>
   </section>
 
 </main>
 
+
 <!-- FOOTER -->
 
 <footer>
+
   <div class="container">
 
     <div class="footer-grid">
 
       <div>
-        <div class="logo">
-          <span class="logo-mark">EZ</span>
-          <span>EZ MEDIA</span>
-        </div>
-
-        <p style="margin-top:15px;">
-          منصة الإعلام الرقمي وصناعة المحتوى.
+        <h2>EZ MEDIA</h2>
+        <p>
+          منصة الإعلام الرقمي وصناعة المحتوى والتغطيات والإنتاج والإعلانات.
         </p>
       </div>
 
       <div>
         <h3>المنصة</h3>
-        <a href="#sections">الأقسام</a>
-        <a href="#content">المحتوى</a>
-        <a href="#live">البث المباشر</a>
-        <a href="#services">الخدمات</a>
+        <p><a href="#sections">الأقسام</a></p>
+        <p><a href="#content">المحتوى</a></p>
+        <p><a href="#ads">الإعلانات</a></p>
       </div>
 
       <div>
-        <h3>النظام</h3>
-        <a href="/api/health">حالة النظام</a>
-        <a href="/api/platform">بيانات المنصة</a>
+        <h3>الخدمات</h3>
+        <p>تغطيات إعلامية</p>
+        <p>إنتاج محتوى</p>
+        <p>إعلانات ورعاية</p>
+      </div>
+
+      <div>
+        <h3>التواصل</h3>
+        <p id="phoneDisplay">رقم التواصل يضاف من لوحة الإدارة</p>
+        <p>عن بُعد</p>
       </div>
 
     </div>
@@ -995,288 +871,621 @@
     </div>
 
   </div>
+
 </footer>
 
+
+<!-- ADMIN MODAL -->
+
+<div class="modal" id="adminModal">
+
+  <div class="admin-panel">
+
+    <div class="admin-head">
+
+      <div>
+        <h2>لوحة إدارة EZ MEDIA</h2>
+        <p>
+          إضافة تغطية أو محتوى جديد.
+        </p>
+      </div>
+
+      <button class="close" onclick="closeAdmin()">×</button>
+
+    </div>
+
+
+    <div class="form-grid">
+
+      <div class="field">
+        <label>عنوان المحتوى</label>
+        <input id="contentTitle" placeholder="مثال: تغطية فعالية..." />
+      </div>
+
+      <div class="field">
+        <label>نوع المحتوى</label>
+
+        <select id="contentType">
+
+          <option value="coverage">تغطية إعلامية</option>
+          <option value="article">مقال / خبر</option>
+          <option value="video">فيديو</option>
+          <option value="podcast">بودكاست</option>
+          <option value="live">بث مباشر</option>
+          <option value="sponsor">رعاية</option>
+          <option value="advertisement">إعلان</option>
+
+        </select>
+
+      </div>
+
+
+      <div class="field">
+        <label>القسم</label>
+
+        <select id="sectionSelect"></select>
+
+      </div>
+
+
+      <div class="field">
+        <label>الفرع</label>
+
+        <input id="branchInput" placeholder="اسم الفرع" />
+
+      </div>
+
+
+      <div class="field full">
+        <label>وصف المحتوى</label>
+
+        <textarea
+          id="contentDescription"
+          placeholder="اكتب وصف التغطية أو المحتوى..."
+        ></textarea>
+
+      </div>
+
+
+      <div class="field">
+        <label>رابط الصورة</label>
+        <input id="imageUrl" placeholder="https://..." />
+      </div>
+
+
+      <div class="field">
+        <label>رابط الفيديو</label>
+        <input id="videoUrl" placeholder="https://..." />
+      </div>
+
+
+      <div class="field">
+        <label>اسم الجهة</label>
+        <input id="organization" placeholder="الجهة أو الفعالية" />
+      </div>
+
+
+      <div class="field">
+        <label>رقم التواصل</label>
+        <input id="phoneInput" placeholder="+966..." />
+      </div>
+
+
+      <div class="field full">
+
+        <button class="btn btn-primary" onclick="publishContent()">
+          🚀 نشر المحتوى
+        </button>
+
+      </div>
+
+    </div>
+
+
+    <div id="adminStatus" class="status">
+      جاهز لإضافة المحتوى.
+    </div>
+
+  </div>
+
+</div>
+
+
 <script>
-  "use strict";
 
-  const API = window.location.origin;
+  const API_BASE =
+    "https://ez-media-ez-media.up.railway.app";
 
-  const menuBtn = document.getElementById("menuBtn");
-  const navLinks = document.getElementById("navLinks");
 
-  menuBtn.addEventListener("click", function () {
-    navLinks.classList.toggle("open");
-  });
+  const sections = [
 
-  navLinks.querySelectorAll("a").forEach(function (link) {
-    link.addEventListener("click", function () {
-      navLinks.classList.remove("open");
+    ["الأخبار","📰",["أخبار اليوم","عاجل","تقارير","تحليلات"]],
+    ["التغطيات","🎥",["تغطيات ميدانية","فعاليات","معارض","مؤتمرات"]],
+    ["الفيديو","▶️",["فيديوهات","تقارير مرئية","قصص قصيرة","إنتاج خاص"]],
+    ["البودكاست","🎙️",["حلقات","حوارات","لقاءات","برامج صوتية"]],
+    ["البث المباشر","🔴",["مباشر الآن","جدول البث","إعادة البث"]],
+    ["الفضائية","📡",["برامج","تقارير","نشرات","بث فضائي"]],
+    ["الذكاء الاصطناعي","🤖",["أدوات AI","إنتاج AI","أتمتة","مختبر AI"]],
+    ["الأتمتة","⚙️",["سير العمل","النشر","جدولة","مهام آلية"]],
+    ["الإعلانات","📢",["إعلانات رقمية","حملات","مساحات إعلانية"]],
+    ["الرعاية","🤝",["رعاية برامج","رعاية فعاليات","شراكات"]],
+    ["الإنتاج","🎬",["إنتاج فيديو","تصوير","مونتاج","إخراج"]],
+    ["الاستوديو","🎞️",["تصوير","صوت","إضاءة","بث"]],
+    ["الفعاليات","🎪",["فعاليات","مناسبات","معارض","مؤتمرات"]],
+    ["المجتمع","👥",["مبادرات","قصص","مشاركات"]],
+    ["الاقتصاد","💼",["أعمال","شركات","أسواق","ريادة"]],
+    ["التقنية","💻",["تقنية","ابتكار","تطبيقات","منصات"]],
+    ["السفر","✈️",["وجهات","فنادق","تجارب","تغطيات"]],
+    ["الرياضة","🏆",["أخبار رياضية","فعاليات","مقابلات","تغطيات"]],
+    ["الثقافة","📚",["ثقافة","كتب","فنون","معرفة"]],
+    ["الترفيه","🎭",["ترفيه","فعاليات","نجوم","تجارب"]],
+    ["الصورة","📷",["صور","معارض","تصوير ميداني"]],
+    ["الصوت","🎧",["صوتيات","مقابلات","تعليق صوتي"]],
+    ["الأرشيف","🗄️",["أرشيف الأخبار","أرشيف الفيديو","أرشيف الصور"]],
+    ["الملف الإعلامي","👤",["نبذة","إنجازات","اعتمادات","ظهور إعلامي"]],
+    ["الخدمات","💼",["تغطيات","إنتاج","إعلانات","استشارات"]],
+    ["التجارة","🛒",["متجر","منتجات","عروض","خدمات تجارية"]],
+    ["الشركاء","🌐",["شركاء إعلاميون","شركاء تجاريون","جهات"]],
+    ["المعلنين","📣",["المعلنون","الحملات","النتائج"]],
+    ["التحليلات","📊",["المشاهدات","الوصول","الأداء","التقارير"]],
+    ["مركز الإعلام","📺",["بيانات إعلامية","صور صحفية","مواد إعلامية","تواصل إعلامي"]]
+
+  ];
+
+
+  let localContent = [];
+
+
+  function renderSections(){
+
+    const grid =
+      document.getElementById("sectionsGrid");
+
+    const select =
+      document.getElementById("sectionSelect");
+
+    grid.innerHTML = "";
+    select.innerHTML = "";
+
+    sections.forEach((item,index)=>{
+
+      const [name,icon,branches] = item;
+
+      const card =
+        document.createElement("article");
+
+      card.className = "card";
+
+      card.innerHTML = `
+
+        <div class="card-icon">${icon}</div>
+
+        <h3>${index + 1}. ${name}</h3>
+
+        <p>
+          قسم إعلامي متكامل داخل منصة EZ MEDIA.
+        </p>
+
+        <div class="branch-list">
+
+          ${branches.map(branch =>
+            `<span class="branch">${branch}</span>`
+          ).join("")}
+
+        </div>
+
+      `;
+
+      grid.appendChild(card);
+
+
+      const option =
+        document.createElement("option");
+
+      option.value = name;
+      option.textContent = name;
+
+      select.appendChild(option);
+
     });
-  });
 
-  document.getElementById("year").textContent =
-    new Date().getFullYear();
-
-  function escapeHTML(value) {
-    return String(value ?? "")
-      .replace(/&/g, "&amp;")
-      .replace(/</g, "&lt;")
-      .replace(/>/g, "&gt;")
-      .replace(/"/g, "&quot;")
-      .replace(/'/g, "&#039;");
   }
 
-  async function getJSON(url) {
-    const response = await fetch(url, {
-      headers: {
-        "Accept": "application/json"
-      }
-    });
 
-    if (!response.ok) {
-      throw new Error("HTTP " + response.status);
-    }
+  function renderContent(){
 
-    return response.json();
-  }
+    const grid =
+      document.getElementById("contentGrid");
 
-  function sectionIcon(type, name) {
-    const text = ((type || "") + " " + (name || "")).toLowerCase();
+    if(!localContent.length){
 
-    if (text.includes("خبر") || text.includes("news")) return "📰";
-    if (text.includes("فيديو") || text.includes("video")) return "🎥";
-    if (text.includes("بود") || text.includes("pod")) return "🎙️";
-    if (text.includes("بث") || text.includes("live")) return "📡";
-    if (text.includes("إعلان") || text.includes("ads")) return "📢";
-    if (text.includes("صور") || text.includes("photo")) return "📸";
-    if (text.includes("تقنية") || text.includes("tech")) return "💻";
-    if (text.includes("رياض")) return "🏆";
-    if (text.includes("اقتص")) return "📈";
+      grid.innerHTML = `
 
-    return "✦";
-  }
+        <article class="card">
 
-  function renderSections(items) {
-    const grid = document.getElementById("sectionsGrid");
+          <div class="card-icon">📡</div>
 
-    if (!Array.isArray(items) || items.length === 0) {
-      return;
-    }
-
-    grid.innerHTML = items.map(function (item) {
-      return `
-        <a class="media-card"
-           href="#content"
-           onclick="loadContent('${escapeHTML(item.id || "")}')">
-
-          <div class="card-icon">
-            ${sectionIcon(item.type, item.name)}
-          </div>
-
-          <h3>${escapeHTML(item.name || "قسم إعلامي")}</h3>
+          <h3>لا يوجد محتوى منشور حتى الآن</h3>
 
           <p>
-            ${escapeHTML(item.description || "قسم من أقسام EZ MEDIA")}
+            استخدم لوحة الإدارة لإضافة أول تغطية أو محتوى خاص بك.
           </p>
 
-        </a>
+        </article>
+
       `;
-    }).join("");
 
-    document.getElementById("sectionCount").textContent =
-      items.length + "+";
-
-    document.getElementById("statSections").textContent =
-      items.length;
-  }
-
-  function renderContent(items, targetId) {
-    const grid = document.getElementById(targetId);
-
-    if (!Array.isArray(items) || items.length === 0) {
-      grid.innerHTML = `
-        <div class="empty">
-          لا يوجد محتوى منشور حاليًا.
-        </div>
-      `;
       return;
+
     }
 
-    grid.innerHTML = items.map(function (item) {
-      return `
-        <article class="content-card">
+
+    grid.innerHTML =
+      localContent.map(item => `
+
+        <article class="card content-card">
 
           <div class="content-cover">
-            ${sectionIcon(item.type, item.title)}
+            ${item.type === "video" ? "▶️" : "📰"}
           </div>
 
           <div class="content-body">
 
-            <div class="content-type">
-              ${escapeHTML(item.type || "محتوى")}
-            </div>
+            <span class="tag">
+              ${item.type}
+            </span>
 
-            <h3>
-              ${escapeHTML(item.title || "بدون عنوان")}
-            </h3>
+            <h3>${escapeHtml(item.title)}</h3>
 
             <p>
-              ${escapeHTML(item.excerpt || item.description || "")}
+              ${escapeHtml(item.description)}
             </p>
+
+            <div class="branch-list">
+
+              <span class="branch">
+                ${escapeHtml(item.section)}
+              </span>
+
+              ${item.branch
+                ? `<span class="branch">${escapeHtml(item.branch)}</span>`
+                : ""}
+
+            </div>
 
           </div>
 
         </article>
-      `;
-    }).join("");
+
+      `).join("");
+
   }
 
-  async function loadSections() {
-    try {
-      const data = await getJSON(API + "/api/sections");
 
-      renderSections(data.items || data.data || []);
+  function openAdmin(){
 
-    } catch (error) {
-      console.error("Sections error:", error);
-    }
+    document
+      .getElementById("adminModal")
+      .classList.add("open");
+
   }
 
-  async function loadContent(sectionId) {
-    try {
-      let url = API + "/api/content";
 
-      if (sectionId) {
-        url += "?section=" +
-          encodeURIComponent(sectionId);
-      }
+  function closeAdmin(){
 
-      const data = await getJSON(url);
+    document
+      .getElementById("adminModal")
+      .classList.remove("open");
 
-      const items =
-        data.items ||
-        data.data ||
-        [];
-
-      renderContent(items, "contentGrid");
-
-      document.getElementById("contentCount").textContent =
-        items.length;
-
-      document.getElementById("statContent").textContent =
-        items.length;
-
-    } catch (error) {
-      console.error("Content error:", error);
-
-      document.getElementById("contentGrid").innerHTML = `
-        <div class="empty">
-          تعذر تحميل المحتوى حاليًا.
-        </div>
-      `;
-    }
   }
 
-  async function loadStats() {
-    try {
-      const data = await getJSON(API + "/api/stats");
 
-      const stats = data.stats || data;
+  async function publishContent(){
 
-      if (stats.content !== undefined) {
-        document.getElementById("statContent").textContent =
-          stats.content;
+    const title =
+      document.getElementById("contentTitle").value.trim();
 
-        document.getElementById("contentCount").textContent =
-          stats.content;
-      }
+    const type =
+      document.getElementById("contentType").value;
 
-      if (stats.media !== undefined) {
-        document.getElementById("statMedia").textContent =
-          stats.media;
-      }
+    const section =
+      document.getElementById("sectionSelect").value;
 
-      if (stats.sources !== undefined) {
-        document.getElementById("statSources").textContent =
-          stats.sources;
-      }
+    const branch =
+      document.getElementById("branchInput").value.trim();
 
-      if (stats.sections !== undefined) {
-        document.getElementById("statSections").textContent =
-          stats.sections;
-      }
+    const description =
+      document.getElementById("contentDescription").value.trim();
 
-    } catch (error) {
-      console.log("Stats unavailable:", error.message);
-    }
-  }
+    const image =
+      document.getElementById("imageUrl").value.trim();
 
-  async function searchContent() {
-    const input = document.getElementById("searchInput");
-    const results = document.getElementById("searchResults");
+    const video =
+      document.getElementById("videoUrl").value.trim();
 
-    const query = input.value.trim();
+    const organization =
+      document.getElementById("organization").value.trim();
 
-    if (!query) {
-      results.innerHTML = `
-        <div class="empty">
-          اكتب كلمة للبحث.
-        </div>
-      `;
+    const phone =
+      document.getElementById("phoneInput").value.trim();
+
+
+    if(!title){
+
+      setStatus("اكتب عنوان المحتوى أولًا.");
+
       return;
+
     }
 
-    results.innerHTML = `
-      <div class="empty">
-        جاري البحث...
-      </div>
-    `;
 
-    try {
-      const data = await getJSON(
-        API + "/api/search?q=" +
-        encodeURIComponent(query)
+    const item = {
+
+      id:
+        "local-" +
+        Date.now(),
+
+      title,
+      type,
+      section,
+      branch,
+      description,
+      image,
+      video,
+      organization,
+      phone,
+      created_at:
+        new Date().toISOString()
+
+    };
+
+
+    /*
+      نحفظ محليًا مؤقتًا حتى لو قاعدة البيانات
+      في Railway غير متصلة.
+    */
+
+    localContent.unshift(item);
+
+    localStorage.setItem(
+      "ez_media_content",
+      JSON.stringify(localContent)
+    );
+
+
+    renderContent();
+
+
+    /*
+      محاولة إرسال المحتوى إلى API.
+      إذا لم يكن المسار متاحًا، يبقى المحتوى
+      محفوظًا محليًا ولا تتعطل الواجهة.
+    */
+
+    try{
+
+      const response =
+        await fetch(
+          API_BASE + "/api/content",
+          {
+            method:"POST",
+
+            headers:{
+              "Content-Type":"application/json"
+            },
+
+            body:JSON.stringify({
+
+              title,
+              type,
+              section,
+              branch,
+              description,
+              image,
+              video,
+              organization,
+              phone
+
+            })
+
+          }
+        );
+
+
+      if(response.ok){
+
+        setStatus(
+          "تم إرسال المحتوى إلى EZ MEDIA بنجاح."
+        );
+
+      }else{
+
+        setStatus(
+          "تم حفظ المحتوى محليًا. اتصال قاعدة البيانات يحتاج إصلاحًا."
+        );
+
+      }
+
+    }catch(error){
+
+      setStatus(
+        "تم حفظ المحتوى محليًا. سيتم ربط الحفظ الكامل بعد إصلاح قاعدة البيانات."
       );
 
-      const items =
-        data.items ||
-        data.results ||
-        data.data ||
-        [];
-
-      renderContent(items, "searchResults");
-
-    } catch (error) {
-      console.error("Search error:", error);
-
-      results.innerHTML = `
-        <div class="empty">
-          تعذر تنفيذ البحث حاليًا.
-        </div>
-      `;
     }
+
+
+    document
+      .getElementById("contentTitle")
+      .value = "";
+
+    document
+      .getElementById("branchInput")
+      .value = "";
+
+    document
+      .getElementById("contentDescription")
+      .value = "";
+
+    document
+      .getElementById("imageUrl")
+      .value = "";
+
+    document
+      .getElementById("videoUrl")
+      .value = "";
+
+    document
+      .getElementById("organization")
+      .value = "";
+
   }
 
-  document
-    .getElementById("searchBtn")
-    .addEventListener("click", searchContent);
+
+  function setStatus(message){
+
+    document
+      .getElementById("adminStatus")
+      .textContent = message;
+
+  }
+
+
+  function contactUs(){
+
+    const phone =
+      document
+        .getElementById("phoneDisplay")
+        .dataset.phone;
+
+    if(phone){
+
+      window.location.href =
+        "tel:" + phone;
+
+      return;
+
+    }
+
+    openAdmin();
+
+    setStatus(
+      "أضف رقم التواصل من إعدادات المنصة."
+    );
+
+  }
+
+
+  function escapeHtml(value){
+
+    return String(value || "")
+      .replaceAll("&","&amp;")
+      .replaceAll("<","&lt;")
+      .replaceAll(">","&gt;")
+      .replaceAll('"',"&quot;")
+      .replaceAll("'","&#039;");
+
+  }
+
+
+  async function loadApiContent(){
+
+    try{
+
+      const response =
+        await fetch(
+          API_BASE + "/api/content"
+        );
+
+      if(!response.ok){
+
+        return;
+
+      }
+
+      const data =
+        await response.json();
+
+
+      if(Array.isArray(data)){
+
+        localContent = data;
+
+      }else if(Array.isArray(data.data)){
+
+        localContent = data.data;
+
+      }else if(Array.isArray(data.content)){
+
+        localContent = data.content;
+
+      }
+
+      renderContent();
+
+    }catch(error){
+
+      /*
+        عدم وجود اتصال لا يمنع تشغيل المنصة.
+      */
+
+    }
+
+  }
+
+
+  function loadLocalContent(){
+
+    try{
+
+      const saved =
+        localStorage.getItem(
+          "ez_media_content"
+        );
+
+      if(saved){
+
+        localContent =
+          JSON.parse(saved);
+
+      }
+
+    }catch(error){
+
+      localContent = [];
+
+    }
+
+  }
+
 
   document
-    .getElementById("searchInput")
-    .addEventListener("keydown", function (event) {
-      if (event.key === "Enter") {
-        searchContent();
+    .getElementById("year")
+    .textContent =
+    new Date().getFullYear();
+
+
+  loadLocalContent();
+
+  renderSections();
+
+  renderContent();
+
+  loadApiContent();
+
+
+  document
+    .getElementById("adminModal")
+    .addEventListener("click",function(e){
+
+      if(e.target === this){
+
+        closeAdmin();
+
       }
+
     });
 
-  async function startPlatform() {
-    await loadSections();
-    await loadContent();
-    await loadStats();
-  }
-
-  startPlatform();
 </script>
 
 </body>
