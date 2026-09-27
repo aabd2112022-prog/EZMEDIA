@@ -1,0 +1,2554 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <title>لوحة إدارة EZ MEDIA</title>
+
+  <style>
+    :root{
+      --white:#ffffff;
+      --ice:#f7fcff;
+      --sky:#e9f7ff;
+      --sky2:#cceeff;
+      --blue:#55bff2;
+      --blue2:#168fd0;
+      --deep:#075b88;
+      --text:#17384c;
+      --muted:#5d7888;
+      --border:#d9edf7;
+      --success:#28a96b;
+      --warning:#e5a72d;
+      --danger:#df5b6b;
+      --shadow:0 12px 35px rgba(37,145,195,.12);
+      --radius:22px;
+    }
+
+    *{
+      box-sizing:border-box;
+    }
+
+    html{
+      scroll-behavior:smooth;
+    }
+
+    body{
+      margin:0;
+      font-family:
+        -apple-system,
+        BlinkMacSystemFont,
+        "Segoe UI",
+        Tahoma,
+        Arial,
+        sans-serif;
+      background:
+        radial-gradient(circle at top right,#e9f8ff 0,#fff 42%),
+        linear-gradient(135deg,#fff,#f5fbff);
+      color:var(--text);
+    }
+
+    button,
+    input,
+    select,
+    textarea{
+      font:inherit;
+    }
+
+    button{
+      cursor:pointer;
+    }
+
+    .layout{
+      min-height:100vh;
+      display:grid;
+      grid-template-columns:270px 1fr;
+    }
+
+    /* SIDEBAR */
+
+    .sidebar{
+      position:fixed;
+      top:0;
+      right:0;
+      bottom:0;
+      width:270px;
+      padding:20px 15px;
+      background:
+        linear-gradient(180deg,#ffffff 0%,#f3fbff 100%);
+      border-left:1px solid var(--border);
+      box-shadow:var(--shadow);
+      overflow-y:auto;
+      z-index:100;
+    }
+
+    .brand{
+      padding:8px 10px 22px;
+      margin-bottom:10px;
+      border-bottom:1px solid var(--border);
+    }
+
+    .brand-logo{
+      font-size:30px;
+      font-weight:900;
+      letter-spacing:1px;
+      color:var(--deep);
+    }
+
+    .brand-sub{
+      color:var(--muted);
+      font-size:13px;
+      margin-top:5px;
+    }
+
+    .nav-title{
+      font-size:12px;
+      color:var(--muted);
+      margin:18px 10px 8px;
+    }
+
+    .nav-item{
+      width:100%;
+      display:flex;
+      align-items:center;
+      gap:10px;
+      border:0;
+      background:transparent;
+      color:var(--text);
+      padding:13px 12px;
+      border-radius:15px;
+      text-align:right;
+      margin-bottom:4px;
+      transition:.2s;
+    }
+
+    .nav-item:hover{
+      background:var(--sky);
+      color:var(--deep);
+    }
+
+    .nav-item.active{
+      background:
+        linear-gradient(135deg,var(--sky2),var(--sky));
+      color:var(--deep);
+      font-weight:800;
+    }
+
+    .nav-icon{
+      width:30px;
+      text-align:center;
+      font-size:19px;
+    }
+
+    /* MAIN */
+
+    .main{
+      grid-column:1;
+      padding:25px;
+      margin-right:270px;
+      min-width:0;
+    }
+
+    .topbar{
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      gap:15px;
+      margin-bottom:25px;
+      background:rgba(255,255,255,.86);
+      border:1px solid var(--border);
+      border-radius:22px;
+      padding:17px 20px;
+      box-shadow:var(--shadow);
+      backdrop-filter:blur(10px);
+    }
+
+    .page-title{
+      margin:0;
+      font-size:25px;
+      color:var(--deep);
+    }
+
+    .page-subtitle{
+      margin:5px 0 0;
+      color:var(--muted);
+      font-size:13px;
+    }
+
+    .top-actions{
+      display:flex;
+      gap:9px;
+      flex-wrap:wrap;
+    }
+
+    .btn{
+      border:1px solid var(--border);
+      background:white;
+      color:var(--deep);
+      padding:11px 16px;
+      border-radius:13px;
+      font-weight:700;
+      transition:.2s;
+    }
+
+    .btn:hover{
+      transform:translateY(-1px);
+      box-shadow:0 8px 20px rgba(37,145,195,.12);
+    }
+
+    .btn-primary{
+      color:white;
+      border:0;
+      background:
+        linear-gradient(135deg,var(--blue),var(--blue2));
+    }
+
+    .btn-danger{
+      color:var(--danger);
+    }
+
+    .btn-small{
+      padding:8px 11px;
+      font-size:12px;
+    }
+
+    /* SECTIONS */
+
+    .panel{
+      display:none;
+    }
+
+    .panel.active{
+      display:block;
+    }
+
+    .section-heading{
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:15px;
+      margin-bottom:17px;
+    }
+
+    .section-heading h2{
+      margin:0;
+      font-size:20px;
+      color:var(--deep);
+    }
+
+    .section-heading p{
+      margin:4px 0 0;
+      color:var(--muted);
+      font-size:13px;
+    }
+
+    /* CARDS */
+
+    .stats{
+      display:grid;
+      grid-template-columns:repeat(4,1fr);
+      gap:15px;
+      margin-bottom:20px;
+    }
+
+    .stat-card{
+      background:white;
+      border:1px solid var(--border);
+      border-radius:20px;
+      padding:20px;
+      box-shadow:var(--shadow);
+    }
+
+    .stat-icon{
+      font-size:25px;
+    }
+
+    .stat-label{
+      color:var(--muted);
+      font-size:13px;
+      margin-top:10px;
+    }
+
+    .stat-value{
+      font-size:30px;
+      font-weight:900;
+      color:var(--deep);
+      margin-top:5px;
+    }
+
+    .grid{
+      display:grid;
+      grid-template-columns:repeat(2,1fr);
+      gap:18px;
+    }
+
+    .card{
+      background:white;
+      border:1px solid var(--border);
+      border-radius:var(--radius);
+      box-shadow:var(--shadow);
+      padding:20px;
+    }
+
+    .card h3{
+      margin:0 0 15px;
+      color:var(--deep);
+      font-size:17px;
+    }
+
+    /* FORMS */
+
+    .form-grid{
+      display:grid;
+      grid-template-columns:repeat(2,1fr);
+      gap:14px;
+    }
+
+    .field{
+      display:flex;
+      flex-direction:column;
+      gap:7px;
+    }
+
+    .field.full{
+      grid-column:1/-1;
+    }
+
+    label{
+      font-size:13px;
+      color:var(--deep);
+      font-weight:700;
+    }
+
+    input,
+    select,
+    textarea{
+      width:100%;
+      border:1px solid var(--border);
+      background:var(--ice);
+      color:var(--text);
+      border-radius:13px;
+      padding:12px 13px;
+      outline:none;
+    }
+
+    input:focus,
+    select:focus,
+    textarea:focus{
+      border-color:var(--blue);
+      box-shadow:0 0 0 3px rgba(85,191,242,.14);
+    }
+
+    textarea{
+      min-height:120px;
+      resize:vertical;
+    }
+
+    .form-actions{
+      margin-top:17px;
+      display:flex;
+      gap:9px;
+      flex-wrap:wrap;
+    }
+
+    /* TABLE */
+
+    .table-wrap{
+      overflow:auto;
+      border:1px solid var(--border);
+      border-radius:17px;
+      background:white;
+    }
+
+    table{
+      width:100%;
+      border-collapse:collapse;
+      min-width:760px;
+    }
+
+    th,
+    td{
+      padding:13px;
+      border-bottom:1px solid var(--border);
+      text-align:right;
+      white-space:nowrap;
+    }
+
+    th{
+      background:var(--sky);
+      color:var(--deep);
+      font-size:13px;
+    }
+
+    td{
+      font-size:13px;
+    }
+
+    tr:last-child td{
+      border-bottom:0;
+    }
+
+    /* STATUS */
+
+    .status{
+      display:inline-flex;
+      align-items:center;
+      padding:5px 9px;
+      border-radius:20px;
+      font-size:11px;
+      font-weight:800;
+    }
+
+    .status.draft{
+      background:#f4f9fc;
+      color:var(--muted);
+    }
+
+    .status.review{
+      background:#fff8df;
+      color:#9a7518;
+    }
+
+    .status.ready{
+      background:#e9f7ff;
+      color:var(--deep);
+    }
+
+    .status.published{
+      background:#e9faef;
+      color:var(--success);
+    }
+
+    .status.archived{
+      background:#f0f6f9;
+      color:var(--muted);
+    }
+
+    /* SEARCH */
+
+    .toolbar{
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      gap:10px;
+      flex-wrap:wrap;
+      margin-bottom:15px;
+    }
+
+    .search{
+      flex:1;
+      min-width:220px;
+    }
+
+    /* BRANCHES */
+
+    .branch-list{
+      display:grid;
+      grid-template-columns:repeat(3,1fr);
+      gap:12px;
+    }
+
+    .branch{
+      border:1px solid var(--border);
+      background:var(--ice);
+      border-radius:16px;
+      padding:15px;
+    }
+
+    .branch strong{
+      color:var(--deep);
+    }
+
+    .branch small{
+      display:block;
+      margin-top:6px;
+      color:var(--muted);
+    }
+
+    /* NOTICE */
+
+    .notice{
+      padding:13px 15px;
+      border-radius:15px;
+      background:var(--sky);
+      border:1px solid var(--border);
+      color:var(--deep);
+      font-size:13px;
+      margin-bottom:15px;
+    }
+
+    /* MOBILE */
+
+    .mobile-menu{
+      display:none;
+    }
+
+    @media(max-width:1050px){
+
+      .stats{
+        grid-template-columns:repeat(2,1fr);
+      }
+
+      .grid{
+        grid-template-columns:1fr;
+      }
+
+      .branch-list{
+        grid-template-columns:repeat(2,1fr);
+      }
+    }
+
+    @media(max-width:800px){
+
+      .layout{
+        display:block;
+      }
+
+      .sidebar{
+        transform:translateX(100%);
+        transition:.25s;
+        width:280px;
+      }
+
+      .sidebar.open{
+        transform:translateX(0);
+      }
+
+      .main{
+        margin-right:0;
+        padding:15px;
+      }
+
+      .mobile-menu{
+        display:inline-flex;
+      }
+
+      .topbar{
+        align-items:flex-start;
+      }
+
+      .form-grid{
+        grid-template-columns:1fr;
+      }
+
+      .branch-list{
+        grid-template-columns:1fr;
+      }
+
+      .stats{
+        grid-template-columns:1fr 1fr;
+      }
+    }
+
+    @media(max-width:500px){
+
+      .stats{
+        grid-template-columns:1fr;
+      }
+
+      .topbar{
+        flex-direction:column;
+      }
+
+      .top-actions{
+        width:100%;
+      }
+
+      .top-actions .btn{
+        flex:1;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+<div class="layout">
+
+  <!-- SIDEBAR -->
+
+  <aside class="sidebar" id="sidebar">
+
+    <div class="brand">
+      <div class="brand-logo">EZ MEDIA</div>
+      <div class="brand-sub">مركز التحكم والإدارة</div>
+    </div>
+
+    <div class="nav-title">الرئيسية</div>
+
+    <button class="nav-item active" data-panel="dashboard">
+      <span class="nav-icon">📊</span>
+      لوحة المعلومات
+    </button>
+
+    <div class="nav-title">إدارة المحتوى</div>
+
+    <button class="nav-item" data-panel="content">
+      <span class="nav-icon">📰</span>
+      المحتوى
+    </button>
+
+    <button class="nav-item" data-panel="sections">
+      <span class="nav-icon">🗂️</span>
+      الأقسام والفروع
+    </button>
+
+    <button class="nav-item" data-panel="media">
+      <span class="nav-icon">🖼️</span>
+      مكتبة الوسائط
+    </button>
+
+    <div class="nav-title">الأعمال</div>
+
+    <button class="nav-item" data-panel="ads">
+      <span class="nav-icon">📢</span>
+      الإعلانات
+    </button>
+
+    <button class="nav-item" data-panel="sponsors">
+      <span class="nav-icon">🤝</span>
+      الرعاية والشركاء
+    </button>
+
+    <button class="nav-item" data-panel="services">
+      <span class="nav-icon">💼</span>
+      الخدمات
+    </button>
+
+    <div class="nav-title">المنصة</div>
+
+    <button class="nav-item" data-panel="automation">
+      <span class="nav-icon">⚙️</span>
+      الأتمتة
+    </button>
+
+    <button class="nav-item" data-panel="analytics">
+      <span class="nav-icon">📈</span>
+      التحليلات
+    </button>
+
+    <button class="nav-item" data-panel="settings">
+      <span class="nav-icon">⚙️</span>
+      إعدادات المنصة
+    </button>
+
+  </aside>
+
+  <!-- MAIN -->
+
+  <main class="main">
+
+    <header class="topbar">
+
+      <div>
+        <h1 class="page-title" id="pageTitle">
+          لوحة المعلومات
+        </h1>
+
+        <p class="page-subtitle" id="pageSubtitle">
+          إدارة منصة EZ MEDIA من مكان واحد
+        </p>
+      </div>
+
+      <div class="top-actions">
+
+        <button class="btn mobile-menu" id="menuBtn">
+          ☰
+        </button>
+
+        <button class="btn" id="openSite">
+          🌐 فتح المنصة
+        </button>
+
+        <button class="btn btn-primary" id="newContentBtn">
+          ＋ محتوى جديد
+        </button>
+
+      </div>
+
+    </header>
+
+
+    <!-- DASHBOARD -->
+
+    <section class="panel active" id="panel-dashboard">
+
+      <div class="stats">
+
+        <div class="stat-card">
+          <div class="stat-icon">📰</div>
+          <div class="stat-label">إجمالي المحتوى</div>
+          <div class="stat-value" id="statContent">0</div>
+        </div>
+
+        <div class="stat-card">
+          <div class="stat-icon">🌐</div>
+          <div class="stat-label">الأقسام</div>
+          <div class="stat-value" id="statSections">30</div>
+        </div>
+
+        <div class="stat-card">
+          <div class="stat-icon">📢</div>
+          <div class="stat-label">الإعلانات</div>
+          <div class="stat-value" id="statAds">0</div>
+        </div>
+
+        <div class="stat-card">
+          <div class="stat-icon">🤝</div>
+          <div class="stat-label">الشركاء والرعاية</div>
+          <div class="stat-value" id="statSponsors">0</div>
+        </div>
+
+      </div>
+
+
+      <div class="grid">
+
+        <div class="card">
+
+          <h3>حالة المنصة</h3>
+
+          <div class="notice" id="apiStatus">
+            جاري فحص اتصال EZ MEDIA...
+          </div>
+
+          <div class="form-actions">
+
+            <button class="btn btn-primary" onclick="checkAPI()">
+              🔄 فحص الاتصال
+            </button>
+
+          </div>
+
+        </div>
+
+
+        <div class="card">
+
+          <h3>سير العمل</h3>
+
+          <div class="branch-list">
+
+            <div class="branch">
+              <strong>📝 مسودة</strong>
+              <small id="workflowDraft">0</small>
+            </div>
+
+            <div class="branch">
+              <strong>🔎 مراجعة</strong>
+              <small id="workflowReview">0</small>
+            </div>
+
+            <div class="branch">
+              <strong>✅ جاهز</strong>
+              <small id="workflowReady">0</small>
+            </div>
+
+            <div class="branch">
+              <strong>🚀 منشور</strong>
+              <small id="workflowPublished">0</small>
+            </div>
+
+          </div>
+
+        </div>
+
+      </div>
+
+    </section>
+
+
+    <!-- CONTENT -->
+
+    <section class="panel" id="panel-content">
+
+      <div class="section-heading">
+
+        <div>
+          <h2>إدارة المحتوى</h2>
+          <p>إضافة وتعديل ومتابعة المحتوى المنشور على المنصة.</p>
+        </div>
+
+        <button class="btn btn-primary" onclick="openContentForm()">
+          ＋ إضافة محتوى
+        </button>
+
+      </div>
+
+
+      <div class="card">
+
+        <div class="toolbar">
+
+          <input
+            class="search"
+            id="contentSearch"
+            placeholder="ابحث في المحتوى..."
+          >
+
+          <select id="contentStatusFilter">
+            <option value="">كل الحالات</option>
+            <option value="draft">مسودة</option>
+            <option value="review">مراجعة</option>
+            <option value="ready">جاهز</option>
+            <option value="published">منشور</option>
+            <option value="archived">مؤرشف</option>
+          </select>
+
+        </div>
+
+        <div class="table-wrap">
+
+          <table>
+
+            <thead>
+              <tr>
+                <th>العنوان</th>
+                <th>النوع</th>
+                <th>القسم</th>
+                <th>الحالة</th>
+                <th>التاريخ</th>
+                <th>إجراء</th>
+              </tr>
+            </thead>
+
+            <tbody id="contentTable">
+              <tr>
+                <td colspan="6">جاري تحميل المحتوى...</td>
+              </tr>
+            </tbody>
+
+          </table>
+
+        </div>
+
+      </div>
+
+    </section>
+
+
+    <!-- SECTIONS -->
+
+    <section class="panel" id="panel-sections">
+
+      <div class="section-heading">
+
+        <div>
+          <h2>الأقسام والفروع</h2>
+          <p>إدارة الهيكل الرئيسي لمنصة EZ MEDIA.</p>
+        </div>
+
+      </div>
+
+      <div class="card">
+
+        <div class="branch-list" id="sectionList"></div>
+
+      </div>
+
+    </section>
+
+
+    <!-- MEDIA -->
+
+    <section class="panel" id="panel-media">
+
+      <div class="section-heading">
+
+        <div>
+          <h2>مكتبة الوسائط</h2>
+          <p>إدارة الصور والفيديوهات والملفات الإعلامية.</p>
+        </div>
+
+      </div>
+
+      <div class="card">
+
+        <div class="notice">
+          سيتم ربط مكتبة الوسائط بالتخزين المركزي في المرحلة التالية.
+        </div>
+
+        <div class="form-grid">
+
+          <div class="field">
+            <label>رابط الصورة</label>
+            <input id="mediaImage" placeholder="https://...">
+          </div>
+
+          <div class="field">
+            <label>اسم الوسائط</label>
+            <input id="mediaName" placeholder="اسم الملف">
+          </div>
+
+          <div class="field full">
+            <label>الوصف</label>
+            <textarea id="mediaDescription"></textarea>
+          </div>
+
+        </div>
+
+      </div>
+
+    </section>
+
+
+    <!-- ADS -->
+
+    <section class="panel" id="panel-ads">
+
+      <div class="section-heading">
+
+        <div>
+          <h2>الإعلانات</h2>
+          <p>إدارة الحملات والمساحات الإعلانية.</p>
+        </div>
+
+        <button class="btn btn-primary" onclick="openContentForm('advertisement')">
+          ＋ إعلان جديد
+        </button>
+
+      </div>
+
+      <div class="card">
+
+        <div class="notice">
+          جميع الإعلانات ستظهر لاحقًا من خلال نظام موحد مرتبط بالمحتوى.
+        </div>
+
+        <div id="adsList"></div>
+
+      </div>
+
+    </section>
+
+
+    <!-- SPONSORS -->
+
+    <section class="panel" id="panel-sponsors">
+
+      <div class="section-heading">
+
+        <div>
+          <h2>الرعاية والشركاء</h2>
+          <p>إدارة الجهات الراعية والشركاء التجاريين والإعلاميين.</p>
+        </div>
+
+        <button class="btn btn-primary" onclick="openContentForm('sponsor')">
+          ＋ شريك / راعٍ
+        </button>
+
+      </div>
+
+      <div class="card">
+
+        <div id="sponsorsList"></div>
+
+      </div>
+
+    </section>
+
+
+    <!-- SERVICES -->
+
+    <section class="panel" id="panel-services">
+
+      <div class="section-heading">
+
+        <div>
+          <h2>الخدمات</h2>
+          <p>إدارة خدمات EZ MEDIA التجارية والإعلامية.</p>
+        </div>
+
+      </div>
+
+      <div class="card">
+
+        <div class="form-grid">
+
+          <div class="field">
+            <label>اسم الخدمة</label>
+            <input id="serviceName" placeholder="مثال: تغطية إعلامية">
+          </div>
+
+          <div class="field">
+            <label>الحالة</label>
+            <select id="serviceStatus">
+              <option value="active">نشطة</option>
+              <option value="inactive">متوقفة</option>
+            </select>
+          </div>
+
+          <div class="field full">
+            <label>وصف الخدمة</label>
+            <textarea id="serviceDescription"></textarea>
+          </div>
+
+        </div>
+
+        <div class="form-actions">
+          <button class="btn btn-primary" onclick="saveService()">
+            حفظ الخدمة
+          </button>
+        </div>
+
+      </div>
+
+    </section>
+
+
+    <!-- AUTOMATION -->
+
+    <section class="panel" id="panel-automation">
+
+      <div class="section-heading">
+
+        <div>
+          <h2>الأتمتة</h2>
+          <p>مركز سير العمل الآلي للمنصة.</p>
+        </div>
+
+      </div>
+
+      <div class="grid">
+
+        <div class="card">
+
+          <h3>سير العمل</h3>
+
+          <div class="branch-list">
+
+            <div class="branch">
+              <strong>💡 الفكرة</strong>
+              <small>استقبال الأفكار</small>
+            </div>
+
+            <div class="branch">
+              <strong>📝 الإنتاج</strong>
+              <small>إعداد المحتوى</small>
+            </div>
+
+            <div class="branch">
+              <strong>🔎 المراجعة</strong>
+              <small>مراجعة المحتوى</small>
+            </div>
+
+            <div class="branch">
+              <strong>🚀 النشر</strong>
+              <small>نشر المحتوى</small>
+            </div>
+
+          </div>
+
+        </div>
+
+        <div class="card">
+
+          <h3>النشر الآلي</h3>
+
+          <div class="notice">
+            سيتم ربط النشر الآلي بالواجهات الرسمية للمنصات المتاحة بعد اكتمال الـ API وقاعدة البيانات.
+          </div>
+
+          <button class="btn btn-primary" onclick="runAutomation()">
+            ⚙️ اختبار سير العمل
+          </button>
+
+        </div>
+
+      </div>
+
+    </section>
+
+
+    <!-- ANALYTICS -->
+
+    <section class="panel" id="panel-analytics">
+
+      <div class="section-heading">
+
+        <div>
+          <h2>التحليلات</h2>
+          <p>متابعة أداء المنصة والمحتوى.</p>
+        </div>
+
+      </div>
+
+      <div class="stats">
+
+        <div class="stat-card">
+          <div class="stat-icon">👁️</div>
+          <div class="stat-label">المشاهدات</div>
+          <div class="stat-value">0</div>
+        </div>
+
+        <div class="stat-card">
+          <div class="stat-icon">👥</div>
+          <div class="stat-label">الوصول</div>
+          <div class="stat-value">0</div>
+        </div>
+
+        <div class="stat-card">
+          <div class="stat-icon">❤️</div>
+          <div class="stat-label">التفاعل</div>
+          <div class="stat-value">0</div>
+        </div>
+
+        <div class="stat-card">
+          <div class="stat-icon">🔗</div>
+          <div class="stat-label">النقرات</div>
+          <div class="stat-value">0</div>
+        </div>
+
+      </div>
+
+      <div class="card">
+
+        <h3>ملاحظة</h3>
+
+        <div class="notice">
+          أرقام التحليلات ستصبح حقيقية بعد ربط مصادر البيانات وقاعدة البيانات.
+        </div>
+
+      </div>
+
+    </section>
+
+
+    <!-- SETTINGS -->
+
+    <section class="panel" id="panel-settings">
+
+      <div class="section-heading">
+
+        <div>
+          <h2>إعدادات المنصة</h2>
+          <p>الإعدادات العامة التي ستتحكم في EZ MEDIA.</p>
+        </div>
+
+      </div>
+
+      <div class="card">
+
+        <div class="form-grid">
+
+          <div class="field">
+            <label>اسم المنصة</label>
+            <input id="settingPlatformName" value="EZ MEDIA">
+          </div>
+
+          <div class="field">
+            <label>اسم صاحب المنصة</label>
+            <input id="settingOwner" value="عز الحربي | Ez Alharbi">
+          </div>
+
+          <div class="field">
+            <label>وصف المنصة</label>
+            <input
+              id="settingDescription"
+              value="منصة إعلامية رقمية متكاملة"
+            >
+          </div>
+
+          <div class="field">
+            <label>رقم التواصل</label>
+            <input id="settingPhone" placeholder="أدخل رقم التواصل">
+          </div>
+
+          <div class="field">
+            <label>البريد الإلكتروني</label>
+            <input id="settingEmail" type="email" placeholder="البريد الإلكتروني">
+          </div>
+
+          <div class="field">
+            <label>حالة المنصة</label>
+            <select id="settingStatus">
+              <option value="online">متاحة</option>
+              <option value="maintenance">صيانة</option>
+            </select>
+          </div>
+
+        </div>
+
+        <div class="form-actions">
+
+          <button class="btn btn-primary" onclick="saveSettings()">
+            💾 حفظ الإعدادات
+          </button>
+
+        </div>
+
+      </div>
+
+    </section>
+
+  </main>
+
+</div>
+
+
+<!-- CONTENT MODAL -->
+
+<div
+  id="contentModal"
+  style="
+    display:none;
+    position:fixed;
+    inset:0;
+    z-index:500;
+    background:rgba(230,247,255,.75);
+    backdrop-filter:blur(8px);
+    padding:20px;
+    overflow:auto;
+  "
+>
+
+  <div
+    style="
+      max-width:900px;
+      margin:40px auto;
+      background:white;
+      border:1px solid var(--border);
+      border-radius:25px;
+      box-shadow:0 20px 60px rgba(37,145,195,.18);
+      padding:24px;
+    "
+  >
+
+    <div class="section-heading">
+
+      <div>
+        <h2 id="modalTitle">إضافة محتوى</h2>
+        <p>أدخل بيانات المحتوى ثم احفظه.</p>
+      </div>
+
+      <button class="btn" onclick="closeContentForm()">
+        ✕ إغلاق
+      </button>
+
+    </div>
+
+
+    <div class="form-grid">
+
+      <div class="field full">
+
+        <label>عنوان المحتوى</label>
+
+        <input
+          id="contentTitle"
+          placeholder="اكتب عنوان المحتوى"
+        >
+
+      </div>
+
+
+      <div class="field">
+
+        <label>نوع المحتوى</label>
+
+        <select id="contentType">
+
+          <option value="article">مقال / خبر</option>
+          <option value="coverage">تغطية</option>
+          <option value="video">فيديو</option>
+          <option value="podcast">بودكاست</option>
+          <option value="live">بث مباشر</option>
+          <option value="advertisement">إعلان</option>
+          <option value="sponsor">رعاية / شراكة</option>
+
+        </select>
+
+      </div>
+
+
+      <div class="field">
+
+        <label>الحالة</label>
+
+        <select id="contentStatus">
+
+          <option value="draft">مسودة</option>
+          <option value="review">مراجعة</option>
+          <option value="ready">جاهز</option>
+          <option value="published">منشور</option>
+          <option value="archived">مؤرشف</option>
+
+        </select>
+
+      </div>
+
+
+      <div class="field">
+
+        <label>القسم</label>
+
+        <select id="contentSection"></select>
+
+      </div>
+
+
+      <div class="field">
+
+        <label>الفرع</label>
+
+        <select id="contentBranch"></select>
+
+      </div>
+
+
+      <div class="field full">
+
+        <label>الوصف</label>
+
+        <textarea
+          id="contentDescription"
+          placeholder="وصف المحتوى"
+        ></textarea>
+
+      </div>
+
+
+      <div class="field">
+
+        <label>رابط الصورة</label>
+
+        <input
+          id="contentImage"
+          placeholder="https://..."
+        >
+
+      </div>
+
+
+      <div class="field">
+
+        <label>رابط الفيديو</label>
+
+        <input
+          id="contentVideo"
+          placeholder="https://..."
+        >
+
+      </div>
+
+
+      <div class="field">
+
+        <label>الجهة / العميل</label>
+
+        <input
+          id="contentOrganization"
+          placeholder="اسم الجهة"
+        >
+
+      </div>
+
+
+      <div class="field">
+
+        <label>رقم التواصل</label>
+
+        <input
+          id="contentPhone"
+          placeholder="رقم التواصل"
+        >
+
+      </div>
+
+    </div>
+
+
+    <div class="form-actions">
+
+      <button
+        class="btn btn-primary"
+        onclick="saveContent()"
+      >
+        💾 حفظ المحتوى
+      </button>
+
+      <button
+        class="btn"
+        onclick="closeContentForm()"
+      >
+        إلغاء
+      </button>
+
+    </div>
+
+  </div>
+
+</div>
+
+
+<script>
+
+const API_BASE =
+  "https://ez-media-ez-media.up.railway.app";
+
+
+const sections = [
+  ["الأخبار","📰",["أخبار اليوم","عاجل","تقارير","تحليلات"]],
+  ["التغطيات","🎥",["تغطيات ميدانية","فعاليات","معارض","مؤتمرات"]],
+  ["الفيديو","▶️",["فيديوهات","تقارير مرئية","قصص قصيرة","إنتاج خاص"]],
+  ["البودكاست","🎙️",["حلقات","حوارات","لقاءات","برامج صوتية"]],
+  ["البث المباشر","🔴",["مباشر الآن","جدول البث","إعادة البث"]],
+  ["الفضائية","📡",["برامج","تقارير","نشرات","بث فضائي"]],
+  ["الذكاء الاصطناعي","🤖",["أدوات AI","إنتاج AI","أتمتة","مختبر AI"]],
+  ["الأتمتة","⚙️",["سير العمل","النشر","جدولة","مهام آلية"]],
+  ["الإعلانات","📢",["إعلانات رقمية","حملات","مساحات إعلانية"]],
+  ["الرعاية","🤝",["رعاية برامج","رعاية فعاليات","شراكات"]],
+  ["الإنتاج","🎬",["إنتاج فيديو","تصوير","مونتاج","إخراج"]],
+  ["الاستوديو","🎞️",["تصوير","صوت","إضاءة","بث"]],
+  ["الفعاليات","🎪",["فعاليات","مناسبات","معارض","مؤتمرات"]],
+  ["المجتمع","👥",["مبادرات","قصص","مشاركات"]],
+  ["الاقتصاد","💼",["أعمال","شركات","أسواق","ريادة"]],
+  ["التقنية","💻",["تقنية","ابتكار","تطبيقات","منصات"]],
+  ["السفر","✈️",["وجهات","فنادق","تجارب","تغطيات"]],
+  ["الرياضة","🏆",["أخبار رياضية","فعاليات","مقابلات","تغطيات"]],
+  ["الثقافة","📚",["ثقافة","كتب","فنون","معرفة"]],
+  ["الترفيه","🎭",["ترفيه","فعاليات","نجوم","تجارب"]],
+  ["الصورة","📷",["صور","معارض","تصوير ميداني"]],
+  ["الصوت","🎧",["صوتيات","مقابلات","تعليق صوتي"]],
+  ["الأرشيف","🗄️",["أرشيف الأخبار","أرشيف الفيديو","أرشيف الصور"]],
+  ["الملف الإعلامي","👤",["نبذة","إنجازات","اعتمادات","ظهور إعلامي"]],
+  ["الخدمات","💼",["تغطيات","إنتاج","إعلانات","استشارات"]],
+  ["التجارة","🛒",["متجر","منتجات","عروض","خدمات تجارية"]],
+  ["الشركاء","🌐",["شركاء إعلاميون","شركاء تجاريون","جهات"]],
+  ["المعلنين","📣",["المعلنون","الحملات","النتائج"]],
+  ["التحليلات","📊",["المشاهدات","الوصول","الأداء","التقارير"]],
+  ["مركز الإعلام","📺",["بيانات إعلامية","صور صحفية","مواد إعلامية","تواصل إعلامي"]]
+];
+
+
+let content = [];
+
+
+const titles = {
+
+  dashboard:[
+    "لوحة المعلومات",
+    "إدارة منصة EZ MEDIA من مكان واحد"
+  ],
+
+  content:[
+    "إدارة المحتوى",
+    "إضافة وتعديل ومتابعة المحتوى"
+  ],
+
+  sections:[
+    "الأقسام والفروع",
+    "إدارة الهيكل الرئيسي للمنصة"
+  ],
+
+  media:[
+    "مكتبة الوسائط",
+    "إدارة الصور والفيديوهات والملفات"
+  ],
+
+  ads:[
+    "الإعلانات",
+    "إدارة الحملات والمساحات الإعلانية"
+  ],
+
+  sponsors:[
+    "الرعاية والشركاء",
+    "إدارة الشراكات والرعاية"
+  ],
+
+  services:[
+    "الخدمات",
+    "إدارة خدمات EZ MEDIA"
+  ],
+
+  automation:[
+    "الأتمتة",
+    "إدارة سير العمل والنشر الآلي"
+  ],
+
+  analytics:[
+    "التحليلات",
+    "متابعة أداء المنصة والمحتوى"
+  ],
+
+  settings:[
+    "إعدادات المنصة",
+    "الإعدادات العامة لـ EZ MEDIA"
+  ]
+
+};
+
+
+/* NAVIGATION */
+
+document.querySelectorAll(".nav-item")
+.forEach(button => {
+
+  button.addEventListener("click",()=>{
+
+    const panel =
+      button.dataset.panel;
+
+    document
+      .querySelectorAll(".nav-item")
+      .forEach(item =>
+        item.classList.remove("active")
+      );
+
+    document
+      .querySelectorAll(".panel")
+      .forEach(item =>
+        item.classList.remove("active")
+      );
+
+    button.classList.add("active");
+
+    const target =
+      document.getElementById(
+        "panel-" + panel
+      );
+
+    if(target){
+      target.classList.add("active");
+    }
+
+    if(titles[panel]){
+
+      document.getElementById("pageTitle")
+        .textContent = titles[panel][0];
+
+      document.getElementById("pageSubtitle")
+        .textContent = titles[panel][1];
+
+    }
+
+    document
+      .getElementById("sidebar")
+      .classList.remove("open");
+
+  });
+
+});
+
+
+/* MOBILE MENU */
+
+document
+  .getElementById("menuBtn")
+  .addEventListener("click",()=>{
+
+    document
+      .getElementById("sidebar")
+      .classList.toggle("open");
+
+  });
+
+
+/* OPEN SITE */
+
+document
+  .getElementById("openSite")
+  .addEventListener("click",()=>{
+
+    window.open(
+      "/",
+      "_blank"
+    );
+
+  });
+
+
+/* LOCAL STORAGE */
+
+function loadLocalContent(){
+
+  try{
+
+    const saved =
+      localStorage.getItem(
+        "ez_media_content"
+      );
+
+    if(saved){
+
+      const parsed =
+        JSON.parse(saved);
+
+      if(Array.isArray(parsed)){
+        content = parsed;
+      }
+
+    }
+
+  }catch(error){
+
+    console.error(error);
+
+  }
+
+}
+
+
+function saveLocalContent(){
+
+  localStorage.setItem(
+    "ez_media_content",
+    JSON.stringify(content)
+  );
+
+}
+
+
+/* API */
+
+async function loadAPIContent(){
+
+  try{
+
+    const response =
+      await fetch(
+        API_BASE + "/api/content",
+        {
+          method:"GET",
+          headers:{
+            "Accept":"application/json"
+          }
+        }
+      );
+
+    if(!response.ok){
+      throw new Error(
+        "HTTP " + response.status
+      );
+    }
+
+    const data =
+      await response.json();
+
+    let remote = [];
+
+    if(Array.isArray(data)){
+      remote = data;
+    }
+
+    else if(Array.isArray(data.data)){
+      remote = data.data;
+    }
+
+    else if(Array.isArray(data.content)){
+      remote = data.content;
+    }
+
+    if(remote.length){
+
+      content = remote;
+
+      saveLocalContent();
+
+    }
+
+    renderAll();
+
+    return true;
+
+  }catch(error){
+
+    console.warn(
+      "تعذر تحميل API:",
+      error
+    );
+
+    renderAll();
+
+    return false;
+
+  }
+
+}
+
+
+/* API STATUS */
+
+async function checkAPI(){
+
+  const box =
+    document.getElementById(
+      "apiStatus"
+    );
+
+  box.textContent =
+    "جاري الاتصال بالخادم...";
+
+  try{
+
+    const response =
+      await fetch(
+        API_BASE + "/api/health",
+        {
+          method:"GET",
+          headers:{
+            "Accept":"application/json"
+          }
+        }
+      );
+
+    const data =
+      await response.json();
+
+    if(data.success){
+
+      box.innerHTML =
+        "🟢 <strong>الخادم يعمل.</strong> " +
+        "EZ MEDIA API متصل بنجاح. " +
+        "حالة قاعدة البيانات: " +
+        "<strong>" +
+        (data.database || "غير معروفة") +
+        "</strong>";
+
+    }else{
+
+      box.textContent =
+        "🟡 الخادم متاح ولكن توجد مشكلة في الحالة.";
+
+    }
+
+  }catch(error){
+
+    box.textContent =
+      "🔴 تعذر الاتصال بالخادم حالياً.";
+
+  }
+
+}
+
+
+/* SECTION SELECTS */
+
+function fillSections(){
+
+  const select =
+    document.getElementById(
+      "contentSection"
+    );
+
+  select.innerHTML =
+    '<option value="">اختر القسم</option>';
+
+  sections.forEach(
+    (section,index)=>{
+
+      const option =
+        document.createElement("option");
+
+      option.value =
+        index;
+
+      option.textContent =
+        section[1] + " " + section[0];
+
+      select.appendChild(option);
+
+    }
+  );
+
+}
+
+
+function fillBranches(sectionIndex){
+
+  const select =
+    document.getElementById(
+      "contentBranch"
+    );
+
+  select.innerHTML =
+    '<option value="">اختر الفرع</option>';
+
+  if(
+    sectionIndex === "" ||
+    sectionIndex === null ||
+    sectionIndex === undefined
+  ){
+    return;
+  }
+
+  const section =
+    sections[Number(sectionIndex)];
+
+  if(!section) return;
+
+  section[2].forEach(branch=>{
+
+    const option =
+      document.createElement("option");
+
+    option.value =
+      branch;
+
+    option.textContent =
+      branch;
+
+    select.appendChild(option);
+
+  });
+
+}
+
+
+document
+  .getElementById("contentSection")
+  .addEventListener(
+    "change",
+    event =>
+      fillBranches(
+        event.target.value
+      )
+  );
+
+
+/* CONTENT MODAL */
+
+function openContentForm(type){
+
+  document
+    .getElementById("contentModal")
+    .style.display = "block";
+
+  document
+    .getElementById("modalTitle")
+    .textContent =
+      type === "advertisement"
+      ? "إضافة إعلان"
+      : type === "sponsor"
+      ? "إضافة شريك / راعٍ"
+      : "إضافة محتوى";
+
+  document
+    .getElementById("contentType")
+    .value =
+      type || "article";
+
+}
+
+
+function closeContentForm(){
+
+  document
+    .getElementById("contentModal")
+    .style.display = "none";
+
+}
+
+
+document
+  .getElementById("newContentBtn")
+  .addEventListener(
+    "click",
+    ()=>openContentForm()
+  );
+
+
+function getFormContent(){
+
+  return {
+
+    id:
+      Date.now().toString(),
+
+    title:
+      document
+        .getElementById("contentTitle")
+        .value
+        .trim(),
+
+    type:
+      document
+        .getElementById("contentType")
+        .value,
+
+    status:
+      document
+        .getElementById("contentStatus")
+        .value,
+
+    section:
+      document
+        .getElementById("contentSection")
+        .selectedOptions[0]?.textContent || "",
+
+    branch:
+      document
+        .getElementById("contentBranch")
+        .value,
+
+    description:
+      document
+        .getElementById("contentDescription")
+        .value
+        .trim(),
+
+    image:
+      document
+        .getElementById("contentImage")
+        .value
+        .trim(),
+
+    video:
+      document
+        .getElementById("contentVideo")
+        .value
+        .trim(),
+
+    organization:
+      document
+        .getElementById("contentOrganization")
+        .value
+        .trim(),
+
+    phone:
+      document
+        .getElementById("contentPhone")
+        .value
+        .trim(),
+
+    createdAt:
+      new Date().toISOString()
+
+  };
+
+}
+
+
+async function saveContent(){
+
+  const item =
+    getFormContent();
+
+  if(!item.title){
+
+    alert(
+      "اكتب عنوان المحتوى أولاً."
+    );
+
+    return;
+
+  }
+
+
+  content.unshift(item);
+
+  saveLocalContent();
+
+  renderAll();
+
+
+  try{
+
+    await fetch(
+      API_BASE + "/api/content",
+      {
+        method:"POST",
+        headers:{
+          "Content-Type":
+            "application/json"
+        },
+        body:
+          JSON.stringify(item)
+      }
+    );
+
+  }catch(error){
+
+    console.warn(
+      "تم الحفظ محلياً:",
+      error
+    );
+
+  }
+
+
+  closeContentForm();
+
+  alert(
+    "تم حفظ المحتوى بنجاح."
+  );
+
+}
+
+
+/* TABLE */
+
+function renderContent(){
+
+  const table =
+    document.getElementById(
+      "contentTable"
+    );
+
+  const search =
+    (
+      document
+        .getElementById(
+          "contentSearch"
+        )
+        .value || ""
+    )
+    .toLowerCase();
+
+  const filter =
+    document
+      .getElementById(
+        "contentStatusFilter"
+      )
+      .value;
+
+
+  const filtered =
+    content.filter(item=>{
+
+      const text =
+        (
+          item.title +
+          " " +
+          item.section +
+          " " +
+          item.branch
+        ).toLowerCase();
+
+      const matchesSearch =
+        !search ||
+        text.includes(search);
+
+      const matchesStatus =
+        !filter ||
+        item.status === filter;
+
+      return (
+        matchesSearch &&
+        matchesStatus
+      );
+
+    });
+
+
+  if(!filtered.length){
+
+    table.innerHTML =
+      `
+      <tr>
+        <td colspan="6">
+          لا يوجد محتوى حالياً.
+        </td>
+      </tr>
+      `;
+
+    return;
+
+  }
+
+
+  table.innerHTML =
+    filtered.map(item=>{
+
+      const statusText =
+        getStatusText(item.status);
+
+      const date =
+        item.createdAt
+        ? new Date(
+            item.createdAt
+          ).toLocaleDateString("ar-SA")
+        : "-";
+
+
+      return `
+        <tr>
+
+          <td>
+            <strong>
+              ${escapeHTML(item.title || "-")}
+            </strong>
+          </td>
+
+          <td>
+            ${escapeHTML(
+              getTypeText(item.type)
+            )}
+          </td>
+
+          <td>
+            ${escapeHTML(
+              item.section || "-"
+            )}
+          </td>
+
+          <td>
+            <span class="status ${item.status || "draft"}">
+              ${statusText}
+            </span>
+          </td>
+
+          <td>
+            ${date}
+          </td>
+
+          <td>
+
+            <button
+              class="btn btn-small btn-danger"
+              onclick="deleteContent('${item.id}')"
+            >
+              حذف
+            </button>
+
+          </td>
+
+        </tr>
+      `;
+
+    }).join("");
+
+}
+
+
+function deleteContent(id){
+
+  if(
+    !confirm(
+      "هل تريد حذف هذا المحتوى؟"
+    )
+  ){
+    return;
+  }
+
+  content =
+    content.filter(
+      item => item.id !== id
+    );
+
+  saveLocalContent();
+
+  renderAll();
+
+}
+
+
+/* SEARCH */
+
+document
+  .getElementById("contentSearch")
+  .addEventListener(
+    "input",
+    renderContent
+  );
+
+
+document
+  .getElementById("contentStatusFilter")
+  .addEventListener(
+    "change",
+    renderContent
+  );
+
+
+/* SECTION LIST */
+
+function renderSections(){
+
+  const box =
+    document.getElementById(
+      "sectionList"
+    );
+
+  box.innerHTML =
+    sections.map(
+      section => {
+
+        return `
+          <div class="branch">
+
+            <strong>
+              ${section[1]}
+              ${section[0]}
+            </strong>
+
+            <small>
+              ${section[2].join(" • ")}
+            </small>
+
+          </div>
+        `;
+
+      }
+    ).join("");
+
+}
+
+
+/* ADS */
+
+function renderAds(){
+
+  const box =
+    document.getElementById(
+      "adsList"
+    );
+
+  const ads =
+    content.filter(
+      item =>
+        item.type === "advertisement"
+    );
+
+  if(!ads.length){
+
+    box.innerHTML =
+      `
+      <div class="notice">
+        لا توجد إعلانات مضافة حالياً.
+      </div>
+      `;
+
+    return;
+
+  }
+
+  box.innerHTML =
+    ads.map(item=>{
+
+      return `
+        <div class="branch" style="margin-bottom:10px">
+
+          <strong>
+            ${escapeHTML(item.title)}
+          </strong>
+
+          <small>
+            ${escapeHTML(item.description || "")}
+          </small>
+
+        </div>
+      `;
+
+    }).join("");
+
+}
+
+
+/* SPONSORS */
+
+function renderSponsors(){
+
+  const box =
+    document.getElementById(
+      "sponsorsList"
+    );
+
+  const sponsors =
+    content.filter(
+      item =>
+        item.type === "sponsor"
+    );
+
+  if(!sponsors.length){
+
+    box.innerHTML =
+      `
+      <div class="notice">
+        لا توجد شراكات أو رعاية مضافة حالياً.
+      </div>
+      `;
+
+    return;
+
+  }
+
+  box.innerHTML =
+    sponsors.map(item=>{
+
+      return `
+        <div class="branch" style="margin-bottom:10px">
+
+          <strong>
+            ${escapeHTML(item.title)}
+          </strong>
+
+          <small>
+            ${escapeHTML(
+              item.organization || ""
+            )}
+          </small>
+
+        </div>
+      `;
+
+    }).join("");
+
+}
+
+
+/* SERVICES */
+
+function saveService(){
+
+  const name =
+    document
+      .getElementById(
+        "serviceName"
+      )
+      .value
+      .trim();
+
+  if(!name){
+
+    alert(
+      "اكتب اسم الخدمة."
+    );
+
+    return;
+
+  }
+
+  alert(
+    "تم حفظ الخدمة محلياً. سيتم ربطها بقاعدة البيانات في الخطوة التالية."
+  );
+
+}
+
+
+/* SETTINGS */
+
+function saveSettings(){
+
+  const settings = {
+
+    platformName:
+      document
+        .getElementById(
+          "settingPlatformName"
+        )
+        .value,
+
+    owner:
+      document
+        .getElementById(
+          "settingOwner"
+        )
+        .value,
+
+    description:
+      document
+        .getElementById(
+          "settingDescription"
+        )
+        .value,
+
+    phone:
+      document
+        .getElementById(
+          "settingPhone"
+        )
+        .value,
+
+    email:
+      document
+        .getElementById(
+          "settingEmail"
+        )
+        .value,
+
+    status:
+      document
+        .getElementById(
+          "settingStatus"
+        )
+        .value
+
+  };
+
+
+  localStorage.setItem(
+    "ez_media_settings",
+    JSON.stringify(settings)
+  );
+
+
+  alert(
+    "تم حفظ إعدادات المنصة."
+  );
+
+}
+
+
+/* AUTOMATION */
+
+function runAutomation(){
+
+  alert(
+    "تم تشغيل اختبار سير العمل. الربط الآلي الكامل سيكون بعد ربط قاعدة البيانات وواجهات النشر."
+  );
+
+}
+
+
+/* STATISTICS */
+
+function renderStats(){
+
+  document
+    .getElementById(
+      "statContent"
+    )
+    .textContent =
+      content.length;
+
+
+  document
+    .getElementById(
+      "statAds"
+    )
+    .textContent =
+      content.filter(
+        item =>
+          item.type === "advertisement"
+      ).length;
+
+
+  document
+    .getElementById(
+      "statSponsors"
+    )
+    .textContent =
+      content.filter(
+        item =>
+          item.type === "sponsor"
+      ).length;
+
+
+  document
+    .getElementById(
+      "workflowDraft"
+    )
+    .textContent =
+      content.filter(
+        item =>
+          item.status === "draft"
+      ).length;
+
+
+  document
+    .getElementById(
+      "workflowReview"
+    )
+    .textContent =
+      content.filter(
+        item =>
+          item.status === "review"
+      ).length;
+
+
+  document
+    .getElementById(
+      "workflowReady"
+    ).textContent =
+      content.filter(
+        item =>
+          item.status === "ready"
+      ).length;
+
+
+  document
+    .getElementById(
+      "workflowPublished"
+    ).textContent =
+      content.filter(
+        item =>
+          item.status === "published"
+      ).length;
+
+}
+
+
+/* HELPERS */
+
+function getStatusText(status){
+
+  const map = {
+
+    draft:"مسودة",
+    review:"مراجعة",
+    ready:"جاهز",
+    published:"منشور",
+    archived:"مؤرشف"
+
+  };
+
+  return map[status] || "مسودة";
+
+}
+
+
+function getTypeText(type){
+
+  const map = {
+
+    article:"مقال / خبر",
+    coverage:"تغطية",
+    video:"فيديو",
+    podcast:"بودكاست",
+    live:"بث مباشر",
+    advertisement:"إعلان",
+    sponsor:"رعاية / شراكة"
+
+  };
+
+  return map[type] || type || "-";
+
+}
+
+
+function escapeHTML(value){
+
+  return String(value || "")
+    .replaceAll("&","&amp;")
+    .replaceAll("<","&lt;")
+    .replaceAll(">","&gt;")
+    .replaceAll('"',"&quot;")
+    .replaceAll("'","&#039;");
+
+}
+
+
+/* RENDER ALL */
+
+function renderAll(){
+
+  renderContent();
+
+  renderSections();
+
+  renderAds();
+
+  renderSponsors();
+
+  renderStats();
+
+}
+
+
+/* START */
+
+loadLocalContent();
+
+fillSections();
+
+renderAll();
+
+loadAPIContent();
+
+checkAPI();
+
+</script>
+
+</body>
+</html>
